@@ -111,6 +111,29 @@ const FRUIT360={
  "Shallot":"https://commons.wikimedia.org/wiki/Special:FilePath/Shallots.jpg?width=512",
  "Watercress":"https://commons.wikimedia.org/wiki/Special:FilePath/Watercress.jpg?width=512"
 };
+const CROP_ICON_BASE="https://raw.githubusercontent.com/openfarmcc/open-crop-icons/mainline/icons/";
+const CROP_ICON_FILES={
+ "Asparagus":"asparagus/asparagus.svg","Aubergine":"eggplant/eggplant.svg","Beetroot":"beet/beet.svg","Bell pepper":"green-bell-pepper/green-bell-pepper.svg",
+ "Broccoli":"broccoli/broccoli.svg","Brussels sprouts":"brussel-sprout/brussel-sprout.svg","Cabbage":"green-cabbage/green-cabbage.svg","Carrot":"carrot/carrot.svg",
+ "Cauliflower":"cauliflower/cauliflower.svg","Celery":"celery/celery.svg","Chard":"swiss-chard/swiss-chard.svg","Chicory":"belgian-endive/belgian-endive.svg",
+ "Corn":"corn/corn.svg","Cucumber":"cucumber/cucumber.svg","Fennel":"fennel/fennel.svg","Garlic":"garlic/garlic.svg",
+ "Green beans":"blue-lake-bean/blue-lake-bean.svg","Kale":"curly-kale/curly-kale.svg","Leek":"leek/leek.svg","Lettuce":"loose-leaf-lettuce/loose-leaf-lettuce.svg",
+ "Mushroom":"generic-mushroom/generic-mushroom.svg","Okra":"okra/okra.svg","Onion":"yellow-onion/yellow-onion.svg","Parsnip":"parsnip/parsnip.svg",
+ "Peas":"snap-pea/snap-pea.svg","Potato":"russet-potato/russet-potato.svg","Pumpkin":"pumpkin/pumpkin.svg","Radish":"french-breakfast-radish/french-breakfast-radish.svg",
+ "Spinach":"spinach/spinach.svg","Sweet potato":"sweet-potato/sweet-potato.svg","Tomato":"cherry-tomato/cherry-tomato.svg","Turnip":"turnip/turnip.svg",
+ "Zucchini":"zucchini/zucchini.svg","Bok choy":"bok-choy/bok-choy.svg","Butternut squash":"butternut-squash/butternut-squash.svg",
+ "Celeriac":"celeriac-root/celeriac-root.svg","Kohlrabi":"kohlrabi/kohlrabi.svg","Shallot":"shallot/shallot.svg"
+};
+function customCropSvg(v){
+ const artichoke='<path d="M32 13Q18 2 15 23Q5 26 13 39Q10 52 25 54Q32 63 39 54Q54 52 51 39Q59 26 49 23Q46 2 32 13Z" fill="#6b9b50" stroke="#315f36" stroke-width="2"/><path d="M32 14L24 48M32 14L40 48M16 25L29 43M48 25L35 43M13 39L29 49M51 39L35 49" stroke="#d7e6a0" stroke-width="2" fill="none"/>';
+ const watercress='<path d="M31 54Q28 36 17 20M31 54Q35 32 47 16M31 54Q18 40 8 39M31 54Q43 40 56 39" stroke="#397447" stroke-width="3" fill="none" stroke-linecap="round"/><g fill="#70a95b" stroke="#397447" stroke-width="1.5"><ellipse cx="16" cy="19" rx="8" ry="5" transform="rotate(35 16 19)"/><ellipse cx="48" cy="15" rx="8" ry="5" transform="rotate(-35 48 15)"/><ellipse cx="9" cy="38" rx="8" ry="5" transform="rotate(10 9 38)"/><ellipse cx="55" cy="38" rx="8" ry="5" transform="rotate(-10 55 38)"/><ellipse cx="31" cy="31" rx="8" ry="5"/></g>';
+ const body=v==="Artichoke"?artichoke:watercress;
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#f0f3e8"/>'+body+'</svg>';
+}
+function cropIconUrl(v){
+ if(CROP_ICON_FILES[v])return CROP_ICON_BASE+CROP_ICON_FILES[v];
+ return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(customCropSvg(v));
+}
 const EMOJI={"Artichoke":"🌿","Asparagus":"🥦","Aubergine":"🍆","Beetroot":"🫜","Bell pepper":"🫑","Broccoli":"🥦","Brussels sprouts":"🥦","Cabbage":"🥗","Carrot":"🥕","Cauliflower":"🥦","Celery":"🥗","Chard":"🍃","Chicory":"🌱","Corn":"🌽","Cucumber":"🥒","Fennel":"🌿","Garlic":"🧄","Green beans":"🫛","Kale":"🍃","Leek":"🧅","Lettuce":"🥗","Mushroom":"🍄","Okra":"🫛","Onion":"🧅","Parsnip":"🥕","Peas":"🫛","Potato":"🥔","Pumpkin":"🎃","Radish":"🥕","Spinach":"🍃","Sweet potato":"🍠","Tomato":"🍅","Turnip":"🫜","Zucchini":"🥒","Bok choy":"🌱","Butternut squash":"🎃","Celeriac":"🥔","Kohlrabi":"🌱","Shallot":"🧅","Watercress":"🌱"};
 
 const SUPABASE_URL="https://dpnzgpmlbdrlwackyafa.supabase.co";
@@ -122,7 +145,7 @@ function makeCard(r){
  const card=document.createElement("article");card.className="veg";
  const img=document.createElement("img");img.alt=FRENCH_NAMES[v]||v;img.loading="lazy";img.crossOrigin="anonymous";
  const setImage=url=>{if(!url||!img.isConnected)return;img.dataset.imageUrl=url;img.src=url};
- img.onerror=()=>{if(!img.isConnected)return;const fallback=EMOJI[v];if(fallback){img.replaceWith(Object.assign(document.createElement("span"),{className:"emoji",textContent:fallback}))}else{img.remove()}};
+ img.onerror=()=>{if(!img.isConnected)return;if(!img.dataset.cropFallback){img.dataset.cropFallback="1";img.src=cropIconUrl(v);img.dataset.imageUrl=img.src;return}img.onerror=null;img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(customCropSvg(v));img.dataset.imageUrl=img.src};
  card.append(img);
  setImage(FRUIT360[v]);
  const name=document.createElement("div");name.className="name";name.innerHTML=esc(FRENCH_NAMES[v]||v)+'<em>'+esc(v)+'</em>';card.append(name);
