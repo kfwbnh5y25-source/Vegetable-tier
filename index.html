@@ -54,6 +54,22 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_838VhmZlihiFPH5OU34shQ_Aaai2Fhz
 const $ = (id)=>document.getElementById(id);
 const WIKI_TITLES={"Aubergine":"Eggplant","Beetroot":"Beetroot","Bell pepper":"Bell_pepper","Brussels sprouts":"Brussels_sprout","Chard":"Chard","Corn":"Maize","Green beans":"Green_bean","Mushroom":"Mushroom","Peas":"Pea","Sweet potato":"Sweet_potato","Bok choy":"Bok_choy","Butternut squash":"Butternut_squash","Zucchini":"Zucchini"};
 const wikiImageCache={};
+const commonsImageCache={};
+async function getCommonsImage(v){
+ if(!commonsImageCache[v]) commonsImageCache[v]=(async()=>{
+  const query="filetype:bitmap "+v+" vegetable";
+  const endpoint="https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch="+encodeURIComponent(query)+"&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url&iiurlwidth=512&format=json&origin=*";
+  const response=await fetch(endpoint,{headers:{Accept:"application/json"}});
+  if(!response.ok) throw new Error("Commons image lookup failed");
+  const data=await response.json();
+  const pages=Object.values(data.query?.pages||{}).filter(p=>p.imageinfo?.[0]&&!/(flower|blossom|seedling|field of|botanical illustration)/i.test(p.title));
+  const key=v.toLowerCase().replace(/[^a-z]/g,"");
+  const exact=pages.find(p=>p.title.toLowerCase().replace(/[^a-z]/g,"").includes(key));
+  const chosen=exact||pages[0];
+  return chosen?.imageinfo?.[0]?.thumburl||chosen?.imageinfo?.[0]?.url||null;
+ })();
+ return commonsImageCache[v];
+}
 async function getWikiImage(v){
  if(!wikiImageCache[v]) wikiImageCache[v]=(async()=>{
   const title=WIKI_TITLES[v]||v.replace(/ /g,"_");
@@ -114,7 +130,7 @@ $("items").innerHTML=TIERS.map(t=>'<div class="tier" data-tier="'+t+'"><div clas
 function makeTile(v){
  const el=document.createElement("div");el.className="veg-tile";el.draggable=true;el.tabIndex=0;el.setAttribute("role","group");el.dataset.veg=v;
  const src=FRUIT360[v];
- if(src){const im=document.createElement("img");im.alt=v;im.loading="lazy";im.onerror=()=>{if(im.dataset.fallbackTried!=="yes"&&src){im.dataset.fallbackTried="yes";im.src=src;return}const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";im.replaceWith(em)};el.append(im);getWikiImage(v).then(url=>{if(url)im.src=url;else im.src=src}).catch(()=>{im.src=src})}
+ if(src){const im=document.createElement("img");im.alt=v;im.loading="lazy";const showEmoji=()=>{if(!im.isConnected)return;const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";im.replaceWith(em)};im.onerror=()=>{if(im.dataset.fallbackTried!=="yes"&&src){im.dataset.fallbackTried="yes";im.src=src;return}if(im.dataset.commonsTried!=="yes"){im.dataset.commonsTried="yes";getCommonsImage(v).then(url=>{if(url&&im.isConnected)im.src=url;else showEmoji()}).catch(showEmoji);return}showEmoji()};el.append(im);getWikiImage(v).then(url=>{if(im.isConnected)im.src=url||src}).catch(()=>{if(im.isConnected)im.src=src})}
  else{const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";el.append(em)}
  const label=document.createElement("span");label.textContent=v;el.append(label);
  const select=document.createElement("select");select.setAttribute("aria-label","Choose tier for "+v);
