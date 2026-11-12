@@ -239,4 +239,6 @@ document.getElementById("export").addEventListener("click",async()=>{
  }finally{btn.disabled=false;btn.textContent="Exporter en PNG · Export screenshot"}
 });
 load();
+function reportSummaryHeight(){if(window.parent!==window)window.parent.postMessage({type:"laf-summary-height",height:document.documentElement.scrollHeight},"*")}
+if(window.parent!==window){new ResizeObserver(reportSummaryHeight).observe(document.body);window.addEventListener("load",reportSummaryHeight);setTimeout(reportSummaryHeight,250);setTimeout(reportSummaryHeight,1000)}
 </script></body></html>
