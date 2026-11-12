@@ -120,14 +120,32 @@ async function load(){
  finally{btn.disabled=false;btn.textContent="Actualiser · Refresh"}
 }
 document.getElementById("refresh").addEventListener("click",load);
+function showMobileExport(blob){
+ const url=URL.createObjectURL(blob);
+ const overlay=document.createElement("div");
+ overlay.style.cssText="position:fixed;inset:0;z-index:9999;background:#171b17;color:white;overflow:auto;padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px";
+ const top=document.createElement("div");top.style.cssText="width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px";
+ const title=document.createElement("strong");title.textContent="Votre image est prête · Your image is ready";
+ const close=document.createElement("button");close.textContent="Fermer · Close";close.onclick=()=>{URL.revokeObjectURL(url);overlay.remove()};
+ top.append(title,close);overlay.append(top);
+ const help=document.createElement("p");help.style.cssText="margin:0;text-align:center;font-size:14px;line-height:1.4";help.textContent="Touchez Partager pour enregistrer l’image dans Photos, ou maintenez l’image appuyée. · Tap Share to save to Photos, or long-press the image.";
+ const img=document.createElement("img");img.src=url;img.alt="LAF vegetable average tier list";img.style.cssText="display:block;width:100%;height:auto;object-fit:contain;background:#f5f1e8";
+ const actions=document.createElement("div");actions.style.cssText="display:flex;gap:8px;flex-wrap:wrap;justify-content:center";
+ const share=document.createElement("button");share.textContent="Partager / Enregistrer · Share / Save";
+ share.onclick=async()=>{try{const file=new File([blob],"LAF-vegetable-average-tier-list.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"LAF vegetable tier list"});}else{help.textContent="Maintenez l’image appuyée, puis choisissez « Enregistrer dans Photos ». · Long-press the image and choose Save to Photos."}}catch(e){if(e.name!=="AbortError")help.textContent="Maintenez l’image appuyée pour l’enregistrer. · Long-press the image to save it."}};
+ actions.append(share);overlay.append(help,img,actions);document.body.append(overlay);
+}
 document.getElementById("export").addEventListener("click",async()=>{
  const btn=document.getElementById("export");btn.disabled=true;btn.textContent="Préparation…";
  try{
   if(document.fonts?.ready)await document.fonts.ready;
   await Promise.all([...document.querySelectorAll("#tiers img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=img.onerror=resolve;setTimeout(resolve,5000)})));
-  const canvas=await html2canvas(document.querySelector("main"),{backgroundColor:"#f5f1e8",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:1440});
-  const link=document.createElement("a");link.download="LAF-vegetable-average-tier-list.png";link.href=canvas.toDataURL("image/png");link.click();
- }catch(e){alert("Export impossible. Utilisez Imprimer → Enregistrer en PDF. (Export failed; use Print → Save as PDF.)")}
+  const canvas=await html2canvas(document.querySelector("main"),{backgroundColor:"#f5f1e8",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:Math.max(document.documentElement.clientWidth,document.documentElement.scrollWidth)});
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("PNG conversion failed")),"image/png"));
+  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  if(isMobile){showMobileExport(blob);}
+  else{const url=URL.createObjectURL(blob);const link=document.createElement("a");link.download="LAF-vegetable-average-tier-list.png";link.href=url;link.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
+ }catch(e){alert("Export impossible. Réessayez ou utilisez Imprimer → Enregistrer en PDF. (Export failed; please retry or use Print → Save as PDF.)")}
  finally{btn.disabled=false;btn.textContent="Exporter en PNG · Export screenshot"}
 });
 load();
