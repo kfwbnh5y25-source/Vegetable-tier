@@ -84,7 +84,8 @@ $('export').addEventListener('click',async()=>{
     controls.append(link);
     link.click();
     summary.textContent='PNG prêt. Si le téléchargement ne démarre pas, touchez « Télécharger le PNG ».';
-    setTimeout(()=>{if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null}},60000);
+    setTimeout(()=>URL.revokeObjectURL(blobUrl),60000);
+    blobUrl=null;
   }catch(error){
     console.error('PNG export failed:',error);
     summary.textContent='Échec de l’export PNG : '+(error?.message||'erreur inconnue');
