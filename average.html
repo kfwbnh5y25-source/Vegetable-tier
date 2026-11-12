@@ -166,10 +166,10 @@ function buildExportSvg(){
   y+=h+10;
  }
  const H=y+30;
- parts.unshift('<rect width="'+W+'" height="'+H+'" fill="#f5f1e8"/>');
- parts.unshift('<text x="'+margin+'" y="42" font-family="Arial,sans-serif" font-size="17" font-weight="800" letter-spacing="3" fill="#58704c">LAF · LABORATOIRE ALBERT FERT · LA VOIX DU PEUPLE</text>');
- parts.unshift('<text x="'+margin+'" y="96" font-family="Arial,sans-serif" font-size="48" font-weight="900" fill="#20251f">Le classement moyen.</text>');
  parts.unshift('<text x="'+margin+'" y="130" font-family="Arial,sans-serif" font-size="17" fill="#555e52">Classement collectif selon le score moyen · Community ranking by average score</text>');
+ parts.unshift('<text x="'+margin+'" y="96" font-family="Arial,sans-serif" font-size="48" font-weight="900" fill="#20251f">Le classement moyen.</text>');
+ parts.unshift('<text x="'+margin+'" y="42" font-family="Arial,sans-serif" font-size="17" font-weight="800" letter-spacing="3" fill="#58704c">LAF · LABORATOIRE ALBERT FERT · LA VOIX DU PEUPLE</text>');
+ parts.unshift('<rect width="'+W+'" height="'+H+'" fill="#f5f1e8"/>');
  parts.unshift('<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">');
  parts.push('</svg>');
  return {svg:parts.join(""),width:W,height:H};
