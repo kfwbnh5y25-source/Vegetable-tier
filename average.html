@@ -148,14 +148,15 @@ function makeCard(r){
  const v=r.vegetable,score=Number(r.average_score),votes=Number(r.votes)||0;
  const card=document.createElement("article");card.className="veg";
  const img=document.createElement("img");img.alt=FRENCH_NAMES[v]||v;img.loading="lazy";img.crossOrigin="anonymous";
+ const setImage=url=>{if(!url||!img.isConnected)return;img.dataset.imageUrl=url;img.src=url};
  const showEmoji=()=>{if(!img.isConnected)return;img.replaceWith(Object.assign(document.createElement("span"),{className:"emoji",textContent:EMOJI[v]||"🥬"}))};
  img.onerror=()=>{
-  if(img.dataset.fallbackTried!=="yes"&&FRUIT360[v]){img.dataset.fallbackTried="yes";img.src=FRUIT360[v];return}
-  if(img.dataset.commonsTried!=="yes"){img.dataset.commonsTried="yes";getCommonsImage(v).then(url=>{if(url&&img.isConnected)img.src=url;else showEmoji()}).catch(showEmoji);return}
+  if(img.dataset.fallbackTried!=="yes"&&FRUIT360[v]){img.dataset.fallbackTried="yes";setImage(FRUIT360[v]);return}
+  if(img.dataset.commonsTried!=="yes"){img.dataset.commonsTried="yes";getCommonsImage(v).then(url=>{if(url)setImage(url);else showEmoji()}).catch(showEmoji);return}
   showEmoji();
  };
  card.append(img);
- getWikiImage(v).then(url=>{if(img.isConnected)img.src=url||FRUIT360[v]||""}).catch(()=>{if(img.isConnected&&FRUIT360[v])img.src=FRUIT360[v];else showEmoji()});
+ getWikiImage(v).then(url=>{if(img.isConnected){if(url)setImage(url);else if(FRUIT360[v])setImage(FRUIT360[v]);else{img.dataset.imageResolved="yes";getCommonsImage(v).then(next=>next?setImage(next):showEmoji()).catch(showEmoji)}}}).catch(()=>{if(FRUIT360[v])setImage(FRUIT360[v]);else{img.dataset.imageResolved="yes";getCommonsImage(v).then(next=>next?setImage(next):showEmoji()).catch(showEmoji)}});
  const name=document.createElement("div");name.className="name";name.innerHTML=esc(FRENCH_NAMES[v]||v)+'<em>'+esc(v)+'</em>';card.append(name);
  const s=document.createElement("div");s.className="score";s.innerHTML='<strong>'+score.toFixed(2)+'/6</strong> · '+votes+' vote'+(votes>1?'s':'');card.append(s);
  return card;
@@ -211,7 +212,10 @@ async function buildExportSvg(){
  await Promise.all(visibleCards.map(async card=>{
   const name=card.querySelector(".name")?.childNodes[0]?.textContent?.trim();
   const en=card.querySelector(".name em")?.textContent||name;
-  const image=card.querySelector("img");const url=image?.currentSrc||image?.src||FRUIT360[en];if(!url)return;
+  const image=card.querySelector("img");if(image)image.loading="eager";
+  const started=Date.now();
+  while(image&&image.isConnected&&!image.dataset.imageUrl&&Date.now()-started<6000)await new Promise(resolve=>setTimeout(resolve,50));
+  const url=image?.dataset.imageUrl||image?.currentSrc||image?.src||FRUIT360[en];if(!url)return;
   try{
    const response=await fetch(url,{mode:"cors"});if(!response.ok)throw new Error("image unavailable");
    const blob=await response.blob();
