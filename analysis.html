@@ -23,6 +23,18 @@ button{border:0;border-radius:999px;padding:10px 15px;background:#273c2a;color:w
 .hist-legend span{font-size:.62rem;color:#74796f;text-align:center;white-space:nowrap}.hist-legend b{font-weight:850;color:#30372e}
 .empty{background:var(--paper);border-radius:12px;padding:20px;color:var(--muted)}
 .correlation-panel{background:#fffdf8;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:18px}.correlation-panel h2{font-size:1.3rem;margin:0 0 5px;letter-spacing:-.03em}.correlation-panel .lead{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.5}.correlation-list{display:grid;gap:8px}.correlation-item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f5f1e8;border-radius:12px;padding:12px}.correlation-copy{min-width:0}.correlation-copy strong{display:block;font-size:.92rem}.correlation-copy small{display:block;color:var(--muted);font-size:.74rem;margin-top:4px}.correlation-r{font-weight:850;font-size:.83rem;white-space:nowrap;color:var(--green)}.correlation-r.negative{color:#a34f54}
+.extra-panel{background:#fffdf8;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:18px}
+.extra-panel h2{font-size:1.3rem;margin:0 0 5px;letter-spacing:-.03em}
+.extra-panel .lead{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.5}
+.extra-list{display:grid;gap:8px}
+.extra-item{background:#f5f1e8;border-radius:12px;padding:12px;min-width:0}
+.extra-item strong{display:block;font-size:.92rem}
+.extra-item small{display:block;color:var(--muted);font-size:.74rem;margin-top:4px;line-height:1.45}
+.tribe-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.tribe-card{background:#f5f1e8;border-radius:12px;padding:12px;min-width:0}
+.tribe-card h3{margin:0 0 5px;font-size:.95rem}
+.tribe-card p{margin:0;color:var(--muted);font-size:.78rem;line-height:1.45}
+@media(max-width:680px){.extra-panel{padding:12px}.tribe-grid{grid-template-columns:1fr}}
 @media(max-width:680px){.correlation-panel{padding:12px}.correlation-item{padding:10px}}
 .method{margin-top:20px;padding:15px 16px;background:#fffdf8;border:1px solid var(--line);border-radius:14px;color:#62685d;font-size:.78rem;line-height:1.6}
 footer{margin-top:22px;padding-top:12px;border-top:1px solid #d8d3c7;font-size:.8rem;color:#777e72}
@@ -34,6 +46,9 @@ footer{margin-top:22px;padding-top:12px;border-top:1px solid #d8d3c7;font-size:.
 <div class="topline"><span id="summary">Chargement des statistiques…</span><span id="status" role="status" aria-live="polite">Connexion à la base…</span><button id="refresh" type="button">Actualiser · Refresh</button></div>
 <div id="sections" class="sections"><div class="empty">Chargement…</div></div>
 <section class="correlation-panel" aria-labelledby="correlation-title"><h2 id="correlation-title">Funny correlations 🥦</h2><p class="lead">Les légumes qui vont ensemble… ou qui se détestent. Seulement les corrélations vraiment fortes, après correction de la tendance de chaque personne à noter haut ou bas ET de la popularité générale de chaque légume. <em>Correlation is not causation.</em></p><div id="correlation-results" class="correlation-list"><div class="empty">Recherche de duos improbables…</div></div></section>
+<section class="extra-panel" aria-labelledby="tribes-title"><h2 id="tribes-title">Vegetable tribes 🥬</h2><p class="lead">Des groupes de personnes aux classements similaires, après correction des goûts globalement généreux/sévères et de la popularité de chaque légume. Trois groupes exploratoires, pas des étiquettes définitives.</p><div id="tribe-results" class="tribe-grid"><div class="empty">Recherche des tribus…</div></div></section>
+<section class="extra-panel" aria-labelledby="cult-title"><h2 id="cult-title">Cult classic 🌟</h2><p class="lead">Peu de fans, mais des fans qui le mettent systématiquement au sommet : au moins 2 votes S, maximum 40 % de votes S, au moins 5 votes au total.</p><div id="cult-results" class="extra-list"><div class="empty">Recherche des favoris de niche…</div></div></section>
+<section class="extra-panel" aria-labelledby="triple-title"><h2 id="triple-title">Unexpected taste combinations 🧪</h2><p class="lead">Des combinaisons de deux légumes dont les préférences relatives prédisent un troisième — au-delà des effets de popularité. Résultats exploratoires, seuil strict (|r| ≥ 0,90 et 9 votes communs minimum).</p><div id="triple-results" class="extra-list"><div class="empty">Recherche de combinaisons…</div></div></section>
 <div class="method"><strong>Comment lire ces stats :</strong> chaque histogramme montre le nombre de votes dans les six tiers (S → F). Les légumes avec moins de 3 votes sont exclus pour éviter les classements trop fragiles. « Consensus » = écart-type le plus faible ; « ambigu » = entropie la plus élevée ; « polarisant » = votes opposés S/A contre D/F, avec peu de votes au milieu. Les catégories peuvent se recouper.<br><em>Each category is ranked independently; one vegetable can appear in more than one list.</em></div>
 <footer>Les résultats sont anonymes et actualisés depuis la base de données. · Anonymous submissions, live aggregate statistics.</footer>
 </main>
@@ -97,5 +112,28 @@ section('We are all the same','Les votes les plus regroupés autour d’un seul 
 section('Different / ambiguous','Les distributions les plus dispersées entre les six tiers.','MAX ENTROPY',byEntropy,'entropy')+
 section('Most polarising','Le plus grand clivage entre les tiers hauts (S/A) et bas (D/F).','BIMODAL SPLIT',byPolar,'polar');
 const total=rows.reduce((n,r)=>n+r.votes,0);$('summary').textContent=rows.length+' légumes analysés · '+total+' votes pris en compte · 3 votes minimum par légume';$('status').textContent='Données actualisées.'}catch(e){console.error(e);$('status').textContent='Impossible de charger les stats : '+(e.message||e);$('sections').innerHTML='<div class="empty">Erreur de chargement. Réessayez. (Could not load statistics.)</div>'}finally{btn.disabled=false}}
-function refreshAll(){load();loadCorrelations()}$('refresh').addEventListener('click',refreshAll);refreshAll();
+
+async function loadExtras(){
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+ const [tribes,cults,triples]=await Promise.all([
+  client.rpc('vegetable_taste_tribes'),
+  client.rpc('vegetable_cult_classics'),
+  client.rpc('vegetable_taste_combinations')
+ ]);
+ const tribeBox=$('tribe-results'),cultBox=$('cult-results'),tripleBox=$('triple-results');
+ if(tribes.error){tribeBox.innerHTML='<div class="empty">Tribus indisponibles pour le moment.</div>'}
+ else if(!tribes.data?.length){tribeBox.innerHTML='<div class="empty">Pas encore assez de réponses pour former des groupes.</div>'}
+ else tribeBox.innerHTML=tribes.data.map(t=>'<article class="tribe-card"><h3>'+esc(t.tribe)+' · '+Number(t.members)+' personnes</h3><p>Préférences distinctives : '+esc(t.signature)+'.</p></article>').join('');
+ if(cults.error){cultBox.innerHTML='<div class="empty">Cult classics indisponibles.</div>'}
+ else if(!cults.data?.length){cultBox.innerHTML='<div class="empty">Aucun légume ne remplit encore les critères de culte confidentiel.</div>'}
+ else cultBox.innerHTML=cults.data.map(v=>'<article class="extra-item"><strong>'+esc(NAMES[v.vegetable]||v.vegetable)+' · '+esc(v.vegetable)+'</strong><small>'+Number(v.fans)+' votes S sur '+Number(v.votes)+' ('+Math.round(Number(v.fan_share)*100)+' %) · moyenne des fans : '+Number(v.fan_average).toFixed(1)+'/6</small></article>').join('');
+ if(triples.error){tripleBox.innerHTML='<div class="empty">Combinaisons indisponibles.</div>'}
+ else if(!triples.data?.length){tripleBox.innerHTML='<div class="empty">Pas encore de combinaison assez forte et assez documentée.</div>'}
+ else tripleBox.innerHTML=triples.data.map(t=>{
+  const sign=Number(t.interaction)>=0?'positively':'inversely';
+  const phrase=Number(t.interaction)>=0?'Quand les préférences pour les deux premiers vont ensemble, le troisième tend aussi à être aimé.':'Le duo et le troisième légume ont tendance à évoluer en sens opposés.';
+  return '<article class="extra-item"><strong>'+esc(t.vegetable_a)+' + '+esc(t.vegetable_b)+' → '+esc(t.vegetable_c)+'</strong><small>'+phrase+' Interaction r = '+Number(t.interaction).toFixed(2)+' · '+Number(t.shared_votes)+' votes communs.</small></article>';
+ }).join('');
+}
+function refreshAll(){load();loadCorrelations();loadExtras()}$('refresh').addEventListener('click',refreshAll);refreshAll();
 </script></body></html>
