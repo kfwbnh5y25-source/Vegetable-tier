@@ -70,7 +70,7 @@ async function loadCorrelations(){
   if(error)throw error;
   const pairs=data||[];
   if(!pairs.length){
-   target.innerHTML='<div class="empty">Aucune corrélation assez solide pour le moment. Il faut au moins 30 votes communs et |r| ≥ 0,70. On attend que les légumes fassent plus parler d’eux.</div>';
+   target.innerHTML='<div class="empty">Aucune corrélation assez solide pour le moment. Aucune paire n’atteint actuellement |r| ≥ 0,70.</div>';
    return;
   }
   target.innerHTML=pairs.map(p=>{
