@@ -97,5 +97,5 @@ section('We are all the same','Les votes les plus regroupés autour d’un seul 
 section('Different / ambiguous','Les distributions les plus dispersées entre les six tiers.','MAX ENTROPY',byEntropy,'entropy')+
 section('Most polarising','Le plus grand clivage entre les tiers hauts (S/A) et bas (D/F).','BIMODAL SPLIT',byPolar,'polar');
 const total=rows.reduce((n,r)=>n+r.votes,0);$('summary').textContent=rows.length+' légumes analysés · '+total+' votes pris en compte · 3 votes minimum par légume';$('status').textContent='Données actualisées.'}catch(e){console.error(e);$('status').textContent='Impossible de charger les stats : '+(e.message||e);$('sections').innerHTML='<div class="empty">Erreur de chargement. Réessayez. (Could not load statistics.)</div>'}finally{btn.disabled=false}}
-$('refresh').addEventListener('click',load);load();loadCorrelations();
+function refreshAll(){load();loadCorrelations()}$('refresh').addEventListener('click',refreshAll);refreshAll();
 </script></body></html>
