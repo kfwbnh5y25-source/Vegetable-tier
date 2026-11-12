@@ -53,10 +53,11 @@ $('export').addEventListener('click',async()=>{
   button.disabled=true;
   const originalLabel=button.textContent;
   button.textContent='Préparation du PNG…';
-  summary.textContent='Préparation de l’image… (Preparing image…)';
+  summary.textContent='Étape 1/3 : préparation de l’image…';
   let blobUrl=null;
   try{
     const render=await getHtml2Canvas();
+    summary.textContent='Étape 2/3 : rendu du PNG…';
     await Promise.all([...$('capture').querySelectorAll('img')].map(img=>img.decode?img.decode().catch(()=>{}):Promise.resolve()));
     controls.classList.add('export-hidden');
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
@@ -70,22 +71,19 @@ $('export').addEventListener('click',async()=>{
     });
     if(blob.type!=='image/png'||blob.size<1000)throw new Error('The generated PNG is empty or invalid');
     blobUrl=URL.createObjectURL(blob);
-    controls.classList.remove('export-hidden');
-    button.textContent=originalLabel;
-    button.disabled=false;
+    const oldLink=$('png-download');if(oldLink)oldLink.remove();
     const link=document.createElement('a');
+    link.id='png-download';
     link.href=blobUrl;
     link.download='LAF-vegetable-mean-tier-list.png';
-    link.textContent='Télécharger le PNG · Download PNG';
-    link.style.cssText='display:inline-block;padding:10px 15px;border-radius:999px;background:#7041a6;color:white;font-weight:750;text-decoration:none';
-    link.addEventListener('click',()=>{setTimeout(()=>{if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null}},60000)},{once:true});
-    const oldLink=$('png-download');if(oldLink)oldLink.remove();
-    link.id='png-download';
+    link.target='_blank';
+    link.rel='noopener';
+    link.textContent='Ouvrir / télécharger le PNG · Open PNG';
+    link.style.cssText='display:inline-block;padding:12px 16px;border-radius:999px;background:#7041a6;color:white;font-weight:750;text-decoration:none;min-height:44px';
     controls.append(link);
-    link.click();
-    summary.textContent='PNG prêt. Si le téléchargement ne démarre pas, touchez « Télécharger le PNG ».';
-    setTimeout(()=>URL.revokeObjectURL(blobUrl),60000);
+    setTimeout(()=>{try{URL.revokeObjectURL(blobUrl)}catch{}},5*60*1000);
     blobUrl=null;
+    summary.textContent='PNG prêt. Touchez le lien violet. Sur iPhone : ouvrez l’image, puis Partager → Enregistrer l’image.';
   }catch(error){
     console.error('PNG export failed:',error);
     summary.textContent='Échec de l’export PNG : '+(error?.message||'erreur inconnue');
@@ -96,5 +94,5 @@ $('export').addEventListener('click',async()=>{
     button.disabled=false;
     if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null}
   }
-});load();function reportHeight(){if(window.parent!==window)window.parent.postMessage({type:'laf-summary-height',height:document.documentElement.scrollHeight},'*')}if(window.parent!==window){new ResizeObserver(reportHeight).observe(document.body);window.addEventListener('load',reportHeight);setTimeout(reportHeight,250);setTimeout(reportHeight,1000)}
+});;load();function reportHeight(){if(window.parent!==window)window.parent.postMessage({type:'laf-summary-height',height:document.documentElement.scrollHeight},'*')}if(window.parent!==window){new ResizeObserver(reportHeight).observe(document.body);window.addEventListener('load',reportHeight);setTimeout(reportHeight,250);setTimeout(reportHeight,1000)}
 </script></body></html>
