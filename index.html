@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f1e8"><title>Vegetable Tier List</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;color:#20251f;background:#f5f1e8;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:900px;margin:auto;padding:34px 18px 70px}
+header{padding:30px 0 24px;border-bottom:1px solid #d8d3c7}h1{font-size:clamp(2.2rem,7vw,4.4rem);letter-spacing:-.06em;line-height:.98;margin:10px 0 14px}
+.kicker{text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:800;color:#58704c}
+.sub{font-size:1.05rem;color:#62685d;max-width:620px;line-height:1.6}
+.progress{height:8px;background:#e1ddd2;border-radius:9px;overflow:hidden;margin:22px 0 8px}.bar{height:100%;width:0;background:#58704c;transition:width .2s}
+.meta{display:flex;justify-content:space-between;color:#6c7168;font-size:.85rem}
+h2{font-size:1.3rem;letter-spacing:-.03em;margin:28px 0 12px}
+.tiers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tier{background:#fffdf8;border:1px solid #e2ded3;border-radius:14px;padding:13px;min-height:95px}
+.tier label{display:flex;align-items:center;gap:9px;font-weight:800;font-size:.9rem;margin-bottom:9px}
+.tier b{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#e9eddf;color:#40543a}
+select{width:100%;border:1px solid #d9d5ca;border-radius:9px;padding:11px;background:#fffdf8;color:#20251f;font:inherit}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+button{border:0;border-radius:999px;padding:13px 20px;font:inherit;font-weight:750;cursor:pointer}
+.primary{background:#273c2a;color:white}.secondary{background:#e6e1d5;color:#30372e}
+button:disabled{opacity:.45;cursor:not-allowed}
+.note{font-size:.88rem;color:#74796f;line-height:1.5;margin-top:14px}
+#status{margin-top:18px;padding:14px;border-radius:12px;display:none;line-height:1.5}
+#status.ok{display:block;background:#e7efdf;color:#30452c}#status.err{display:block;background:#f7e8e2;color:#7d3023}
+.leaderboard{margin-top:48px;padding-top:25px;border-top:1px solid #d8d3c7}
+table{width:100%;border-collapse:collapse;background:#fffdf8;border-radius:12px;overflow:hidden}td,th{text-align:left;padding:11px 13px;border-bottom:1px solid #eee9df}th{font-size:.78rem;color:#73786e;text-transform:uppercase;letter-spacing:.08em}
+footer{margin-top:40px;color:#85897f;font-size:.8rem}
+@media(max-width:520px){.tiers{grid-template-columns:1fr}.wrap{padding-top:22px}}
+</style>
+</head>
+<body><main class="wrap">
+<header><div class="kicker">A very serious vegetable investigation</div><h1>Rank the<br>vegetables.</h1><p class="sub">Forty vegetables. Six tiers. No fence-sitting. Give every vegetable a rank and help build the definitive community tier list.</p></header>
+<section aria-label="Your rankings"><div class="progress"><div class="bar" id="bar"></div></div><div class="meta"><span id="count">0 of 40 ranked</span><span>All vegetables required</span></div>
+<h2>Your verdict</h2><div class="tiers" id="items"></div>
+<div class="actions"><button class="primary" id="submit" disabled>Submit my ranking</button><button class="secondary" id="reset" type="button">Reset</button></div>
+<p class="note">Submissions are anonymous. Please submit once. Your rankings contribute to the public aggregate leaderboard.</p><div id="status" role="status"></div></section>
+<section class="leaderboard"><div class="kicker">The people's verdict</div><h2>Community leaderboard</h2><p class="note">Average tier score across submitted rankings (S = 6, F = 1).</p><div id="board" class="note">Leaderboard will appear once the database is connected.</div></section>
+<footer>Vegetable Tier List · Anonymous community survey</footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const VEGETABLES = ["Artichoke","Asparagus","Aubergine","Beetroot","Bell pepper","Broccoli","Brussels sprouts","Cabbage","Carrot","Cauliflower","Celery","Chard","Chicory","Corn","Cucumber","Fennel","Garlic","Green beans","Kale","Leek","Lettuce","Mushroom","Okra","Onion","Parsnip","Peas","Potato","Pumpkin","Radish","Spinach","Sweet potato","Tomato","Turnip","Zucchini","Bok choy","Butternut squash","Celeriac","Kohlrabi","Shallot","Watercress"];
+const TIERS = ["S","A","B","C","D","F"];
+const SUPABASE_URL = ""; // Set after creating the Supabase project.
+const SUPABASE_PUBLISHABLE_KEY = ""; // Public publishable key only; never put a secret/service_role key here.
+const $ = (id)=>document.getElementById(id);
+const picks = {};
+const esc = s => s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+$("items").innerHTML = VEGETABLES.map(v=>'<div class="tier"><label><b>'+esc(v[0])+'</b>'+esc(v)+'</label><select aria-label="Rank '+esc(v)+'" data-veg="'+esc(v)+'"><option value="">Choose a tier…</option>'+TIERS.map(t=>'<option>'+t+'</option>').join("")+'</select></div>').join("");
+function update(){const n=Object.keys(picks).length;$("count").textContent=n+" of "+VEGETABLES.length+" ranked";$("bar").style.width=(n/VEGETABLES.length*100)+"%";$("submit").disabled=n!==VEGETABLES.length}
+$("items").addEventListener("change",e=>{if(e.target.matches("select")){if(e.target.value)picks[e.target.dataset.veg]=e.target.value;else delete picks[e.target.dataset.veg];update()}});
+$("reset").onclick=()=>{for(const k of Object.keys(picks))delete picks[k];document.querySelectorAll("select").forEach(s=>s.value="");$("status").className="";$("status").style.display="none";update()};
+function status(msg,kind){$("status").textContent=msg;$("status").className=kind}
+async function loadBoard(){if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){$("board").textContent="Database setup is pending.";return}
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ const {data,error}=await client.rpc("vegetable_leaderboard");
+ if(error){$("board").textContent="Leaderboard temporarily unavailable.";return}
+ if(!data?.length){$("board").textContent="No rankings yet — be the first!";return}
+ $("board").innerHTML='<table><thead><tr><th>Rank</th><th>Vegetable</th><th>Average tier</th><th>Votes</th></tr></thead><tbody>'+data.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.vegetable)+'</td><td>'+Number(r.average_score).toFixed(2)+'</td><td>'+r.votes+'</td></tr>').join("")+'</tbody></table>';
+}
+$("submit").onclick=async()=>{if(Object.keys(picks).length!==VEGETABLES.length)return;
+ if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){status("The page is ready, but the database has not been connected yet. Your ranking has not been submitted.","err");return}
+ $("submit").disabled=true;status("Submitting…","");
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ const {error}=await client.from("vegetable_submissions").insert({rankings:picks});
+ if(error){status("Could not submit: "+error.message,"err");$("submit").disabled=false;return}
+ status("Thanks! Your anonymous ranking has been recorded.","ok");$("items").querySelectorAll("select").forEach(s=>s.disabled=true);$("reset").disabled=true;await loadBoard();
+};
+loadBoard();update();
+</script></body></html>
