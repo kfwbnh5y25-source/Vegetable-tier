@@ -7,37 +7,35 @@
 <title>Le classement moyen du LAF — La voix du peuple</title>
 <style>
 :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;color:#20251f;background:#f5f1e8;font-synthesis:none}
-*{box-sizing:border-box}body{margin:0}.wrap{max-width:1120px;margin:auto;padding:36px 22px 72px}
-header{padding:20px 0 25px;border-bottom:1px solid #d8d3c7}.kicker{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:850;color:#58704c}
-h1{font-size:clamp(2.3rem,7vw,4.5rem);letter-spacing:-.06em;line-height:1;margin:12px 0}
-.sub{font-size:1.05rem;color:#555e52;line-height:1.7;max-width:760px}
-em{color:#7041a6}.meta{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:20px 0;color:#5e665a;font-size:.92rem}
-button{border:0;border-radius:999px;padding:11px 18px;font:inherit;font-weight:750;cursor:pointer;background:#273c2a;color:white}
-.tiers{display:grid;gap:12px}.tier{display:flex;align-items:stretch;min-height:116px;background:#fffdf8;border:1px solid #e2ded3;border-radius:14px;overflow:hidden}
-.tier-label{display:flex;flex:0 0 68px;align-items:center;justify-content:center;font-size:2rem;font-weight:950;color:#222}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:1440px;margin:auto;padding:18px 22px 24px}
+header{padding:8px 0 12px;border-bottom:1px solid #d8d3c7}.kicker{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:850;color:#58704c}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.05em;line-height:1;margin:7px 0}
+.sub{font-size:.82rem;color:#555e52;line-height:1.4;max-width:950px;margin:6px 0}
+em{color:#7041a6}.meta{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:9px 0;color:#5e665a;font-size:.8rem}
+button{border:0;border-radius:999px;padding:8px 13px;font:inherit;font-weight:750;cursor:pointer;background:#273c2a;color:white}
+.tiers{display:grid;gap:6px}.tier{display:flex;align-items:stretch;min-height:66px;background:#fffdf8;border:1px solid #e2ded3;border-radius:14px;overflow:hidden}
+.tier-label{display:flex;flex:0 0 44px;align-items:center;justify-content:center;font-size:1.3rem;font-weight:950;color:#222}
 .tier[data-tier="S"] .tier-label{background:#ff7f7f}.tier[data-tier="A"] .tier-label{background:#ffbf7f}.tier[data-tier="B"] .tier-label{background:#ffdf7f}.tier[data-tier="C"] .tier-label{background:#ffff7f}.tier[data-tier="D"] .tier-label{background:#bfff7f}.tier[data-tier="F"] .tier-label{background:#7fbfff}
-.zone{display:flex;align-items:flex-start;align-content:flex-start;gap:9px;flex:1;flex-wrap:wrap;padding:10px}
-.veg{width:112px;min-height:126px;padding:8px 6px;border:1px solid #e8e3d9;border-radius:11px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;text-align:center}
-.veg img{width:62px;height:62px;object-fit:contain}.emoji{font-size:44px;line-height:62px}
-.name{font-size:.82rem;font-weight:800;line-height:1.25;overflow-wrap:anywhere}.name em{display:block;font-size:.76rem;font-weight:550;margin-top:2px}
-.score{font-size:.75rem;color:#596253;font-variant-numeric:tabular-nums}.score strong{color:#263c29}
+.zone{display:flex;align-items:center;align-content:center;gap:5px;flex:1;flex-wrap:wrap;padding:5px}
+.veg{width:104px;min-height:54px;padding:3px 4px;border:1px solid #e8e3d9;border-radius:8px;background:#fff;display:grid;grid-template-columns:25px 1fr;grid-template-rows:auto auto;align-items:center;column-gap:4px;text-align:left}
+.veg img{width:23px;height:23px;object-fit:contain;grid-row:1 / 3}.emoji{font-size:17px;line-height:23px;grid-row:1 / 3}
+.name{font-size:.66rem;font-weight:800;line-height:1.1;overflow-wrap:anywhere}.name em{display:block;font-size:.58rem;font-weight:550;margin-top:1px}
+.score{font-size:.6rem;color:#596253;font-variant-numeric:tabular-nums}.score strong{color:#263c29}
 .empty{padding:22px;color:#667061;background:#fffdf8;border-radius:12px}
-.legend{margin:18px 0 24px;padding:16px 18px;background:#ebe7dc;border-radius:12px;color:#4f584d;font-size:.91rem;line-height:1.65}
-footer{margin-top:30px;color:#777e72;font-size:.85rem;line-height:1.6}
-@media(max-width:620px){.wrap{padding:24px 12px 52px}.tier-label{flex-basis:48px;font-size:1.55rem}.zone{gap:7px;padding:8px}.veg{width:calc(50% - 4px);min-height:130px}.veg img{width:64px;height:64px}.name{font-size:.84rem}.meta{align-items:flex-start}.meta button{width:100%}}
+.legend{margin:8px 0 10px;padding:8px 11px;background:#ebe7dc;border-radius:12px;color:#4f584d;font-size:.7rem;line-height:1.35}
+footer{margin-top:10px;color:#777e72;font-size:.85rem;line-height:1.6}
+@media(max-width:620px){.wrap{padding:12px 7px 24px}.tier-label{flex-basis:32px;font-size:1.1rem}.zone{gap:3px;padding:3px}.veg{width:calc(50% - 2px);min-height:46px;grid-template-columns:20px 1fr;column-gap:3px;padding:2px}.veg img{width:19px;height:19px}.emoji{font-size:14px;line-height:19px}.name{font-size:.59rem}.name em{font-size:.52rem}.score{font-size:.52rem}.meta{align-items:flex-start}} @media print{@page{size:A4 portrait;margin:7mm}.wrap{max-width:none;padding:0}.meta button{display:none}.tier{break-inside:avoid}.tiers{gap:4px}.veg{break-inside:avoid}}
 </style>
 </head>
 <body><main class="wrap">
 <header><div class="kicker">LAF · Laboratoire Albert Fert · La voix du peuple</div><h1>Le classement moyen.</h1>
 <p class="sub">Le tier list collectif, construit à partir de toutes les réponses anonymes. Chaque légume est placé selon son score moyen, de S à F. <em>The community tier list, built from all anonymous submissions. Every vegetable is placed by its mean score, from S to F.</em></p></header>
-<div class="meta"><span id="summary">Chargement des résultats… <em>(Loading results…)</em></span><button id="refresh" type="button">Actualiser · Refresh</button></div>
-<div class="legend"><strong>Comment le score devient-il un tier ?</strong><br>
-Chaque vote vaut S = 6, A = 5, B = 4, C = 3, D = 2, F = 1. Le score moyen est arrondi au tier le plus proche : <strong>5,5–6 = S · 4,5–&lt;5,5 = A · 3,5–&lt;4,5 = B · 2,5–&lt;3,5 = C · 1,5–&lt;2,5 = D · 1–&lt;1,5 = F.</strong><br>
-Les égalités sont conservées. Les légumes sont ordonnés par score moyen à l’intérieur de chaque tier. Seuls les légumes ayant reçu au moins un vote apparaissent. <em>Scores are rounded to the nearest tier; ties are preserved. Vegetables are sorted by mean score within each tier. Only vegetables with at least one ranking are shown.</em></div>
+<div class="meta"><span id="summary">Chargement des résultats… <em>(Loading results…)</em></span><div><button id="refresh" type="button">Actualiser · Refresh</button> <button id="export" type="button">Exporter en PNG · Export screenshot</button></div></div>
+<div class="legend"><strong>Score moyen → tier :</strong> 5,5–6 S · 4,5–&lt;5,5 A · 3,5–&lt;4,5 B · 2,5–&lt;3,5 C · 1,5–&lt;2,5 D · 1–&lt;1,5 F. <em>Nearest-tier rounding; ties kept. Sorted by mean within each tier.</em></div>
 <div class="tiers" id="tiers"></div>
 <footer>Mis à jour à chaque actualisation · Les moyennes utilisent uniquement les réponses qui ont classé chaque légume. <em>Updated on refresh · Means include only submissions that ranked that vegetable.</em></footer>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 const VEGETABLES=["Artichoke","Asparagus","Aubergine","Beetroot","Bell pepper","Broccoli","Brussels sprouts","Cabbage","Carrot","Cauliflower","Celery","Chard","Chicory","Corn","Cucumber","Fennel","Garlic","Green beans","Kale","Leek","Lettuce","Mushroom","Okra","Onion","Parsnip","Peas","Potato","Pumpkin","Radish","Spinach","Sweet potato","Tomato","Turnip","Zucchini","Bok choy","Butternut squash","Celeriac","Kohlrabi","Shallot","Watercress"];
 const FRENCH_NAMES={"Artichoke":"Artichaut","Asparagus":"Asperge","Aubergine":"Aubergine","Beetroot":"Betterave","Bell pepper":"Poivron","Broccoli":"Brocoli","Brussels sprouts":"Choux de Bruxelles","Cabbage":"Chou","Carrot":"Carotte","Cauliflower":"Chou-fleur","Celery":"Céleri","Chard":"Bette","Chicory":"Chicorée","Corn":"Maïs","Cucumber":"Concombre","Fennel":"Fenouil","Garlic":"Ail","Green beans":"Haricots verts","Kale":"Chou kale","Leek":"Poireau","Lettuce":"Laitue","Mushroom":"Champignon","Okra":"Gombo","Onion":"Oignon","Parsnip":"Panais","Peas":"Petits pois","Potato":"Pomme de terre","Pumpkin":"Potiron","Radish":"Radis","Spinach":"Épinards","Sweet potato":"Patate douce","Tomato":"Tomate","Turnip":"Navet","Zucchini":"Courgette","Bok choy":"Pak-choï","Butternut squash":"Courge butternut","Celeriac":"Céleri-rave","Kohlrabi":"Chou-rave","Shallot":"Échalote","Watercress":"Cresson"};
@@ -122,5 +120,15 @@ async function load(){
  finally{btn.disabled=false;btn.textContent="Actualiser · Refresh"}
 }
 document.getElementById("refresh").addEventListener("click",load);
+document.getElementById("export").addEventListener("click",async()=>{
+ const btn=document.getElementById("export");btn.disabled=true;btn.textContent="Préparation…";
+ try{
+  if(document.fonts?.ready)await document.fonts.ready;
+  await Promise.all([...document.querySelectorAll("#tiers img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=img.onerror=resolve;setTimeout(resolve,5000)})));
+  const canvas=await html2canvas(document.querySelector("main"),{backgroundColor:"#f5f1e8",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:1440});
+  const link=document.createElement("a");link.download="LAF-vegetable-average-tier-list.png";link.href=canvas.toDataURL("image/png");link.click();
+ }catch(e){alert("Export impossible. Utilisez Imprimer → Enregistrer en PDF. (Export failed; use Print → Save as PDF.)")}
+ finally{btn.disabled=false;btn.textContent="Exporter en PNG · Export screenshot"}
+});
 load();
 </script></body></html>
