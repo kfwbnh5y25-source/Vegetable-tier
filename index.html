@@ -42,7 +42,7 @@ footer{margin-top:40px;color:#85897f;font-size:.8rem}
 <div class="actions"><button class="primary" id="submit" disabled>Submit my ranking</button><button class="secondary" id="reset" type="button">Reset</button></div>
 <p class="note">Submissions are anonymous. Rank as few or as many as you like. Only ranked vegetables count towards their mean score.</p><div id="status" role="status"></div></section>
 <section class="leaderboard" id="mean-results"><div class="kicker">The voice of the people</div><h2>Community mean results</h2><p class="note">Mean score for each vegetable, using only submissions that ranked it (S = 6, F = 1).</p><div id="board" class="note">Leaderboard will appear once the database is connected.</div></section>
-<footer>LAF Vegetable Tier List · Laboratoire Albert Fert · Anonymous community survey · Vegetable photos: </footer>
+<footer>LAF Vegetable Tier List · Laboratoire Albert Fert · Anonymous community survey · Artichoke photo: <a href="https://commons.wikimedia.org/wiki/File:Close_Up_Of_An_Artichoke_(245374229).jpeg" target="_blank" rel="noopener">Michael Lang / Wikimedia Commons (CC BY 3.0)</a>.</footer>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -54,7 +54,7 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_838VhmZlihiFPH5OU34shQ_Aaai2Fhz
 const $ = (id)=>document.getElementById(id);
 const picks={};let selectedVeg=null;
 const esc = s => String(s).replace(/[&<>"\']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "\'":"&#39;"}[c]));
-const FRUIT360={}; // No stock fruit photos: use vegetable-specific emoji icons for every tile.
+const FRUIT360={"Artichoke":"https://commons.wikimedia.org/wiki/Special:FilePath/Close_Up_Of_An_Artichoke_%28245374229%29.jpeg?width=512"}; // Artichoke photo: Wikimedia Commons, Michael Lang, CC BY 3.0.
 const EMOJI={"Artichoke":"🥬","Asparagus":"🥦","Aubergine":"🍆","Beetroot":"🫜","Bell pepper":"🫑","Broccoli":"🥦","Brussels sprouts":"🥬","Cabbage":"🥬","Carrot":"🥕","Cauliflower":"🥦","Celery":"🥬","Chard":"🥬","Chicory":"🥬","Corn":"🌽","Cucumber":"🥒","Fennel":"🥬","Garlic":"🧄","Green beans":"🫛","Kale":"🥬","Leek":"🥬","Lettuce":"🥬","Mushroom":"🍄","Okra":"🫛","Onion":"🧅","Parsnip":"🥕","Peas":"🫛","Potato":"🥔","Pumpkin":"🎃","Radish":"🥕","Spinach":"🥬","Sweet potato":"🍠","Tomato":"🍅","Turnip":"🫜","Zucchini":"🥒","Bok choy":"🥬","Butternut squash":"🎃","Celeriac":"🥔","Kohlrabi":"🥬","Shallot":"🧅","Watercress":"🥬"};
 $("items").innerHTML=TIERS.map(t=>'<div class="tier" data-tier="'+t+'"><div class="tier-label">'+t+'</div><div class="tile-zone" data-drop="'+t+'"></div></div>').join("");
 function makeTile(v){
