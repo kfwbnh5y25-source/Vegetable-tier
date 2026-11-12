@@ -27,13 +27,13 @@ footer{margin-top:40px;color:#85897f;font-size:.8rem}
 </style>
 </head>
 <body><main class="wrap">
-<header><div class="kicker">LAF · Laboratoire Albert Fert</div><h1>Rank the<br>LAF vegetables.</h1><p class="sub">The LAF (Laboratoire Albert Fert) vegetable tier list. Forty vegetables. Six tiers. No fence-sitting. Give every vegetable a rank and help build the definitive LAF community tier list.</p></header>
+<header><div class="kicker">LAF · Laboratoire Albert Fert</div><h1>Rank the<br>LAF vegetables.</h1><p class="sub">The LAF (Laboratoire Albert Fert) vegetable tier list. Forty vegetables. Six tiers. No fence-sitting. Give every vegetable a rank and help build the definitive LAF community tier list.</p></header><button class="result-button" id="see-results" type="button">See public mean results ↓</button>
 <section aria-label="Your rankings"><div class="progress"><div class="bar" id="bar"></div></div><div class="meta"><span id="count">0 of 40 ranked</span><span>All vegetables required</span></div>
 <h2>Build your tier list</h2><p class="note">Drag vegetables into a tier. On a phone, tap a vegetable, then tap its tier. Leave anything you don’t want to rate in the tray below.</p><div class="tiers" id="items"></div><div class="pool"><h2>Not ranked yet</h2><p>Leave vegetables here if you can’t be bothered to rank them.</p><div class="tile-zone" id="unranked"></div></div>
 <div class="actions"><button class="primary" id="submit" disabled>Submit my ranking</button><button class="secondary" id="reset" type="button">Reset</button></div>
 <p class="note">Submissions are anonymous. Rank as few or as many as you like. Only ranked vegetables count towards their mean score.</p><div id="status" role="status"></div></section>
 <section class="leaderboard" id="mean-results"><div class="kicker">The people's verdict</div><h2>Community mean results</h2><p class="note">Mean score for each vegetable, using only submissions that ranked it (S = 6, F = 1).</p><div id="board" class="note">Leaderboard will appear once the database is connected.</div></section>
-<button class="result-button" id="see-results" type="button">See public mean results ↓</button><footer>LAF Vegetable Tier List · Laboratoire Albert Fert · Anonymous community survey</footer>
+<footer>LAF Vegetable Tier List · Laboratoire Albert Fert · Anonymous community survey</footer>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
