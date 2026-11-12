@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f5f1e8">
@@ -17,7 +17,7 @@
 *{box-sizing:border-box}body{margin:0}.wrap{max-width:900px;margin:auto;padding:34px 18px 70px}
 header{padding:30px 0 24px;border-bottom:1px solid #d8d3c7}h1{font-size:clamp(2.2rem,7vw,4.4rem);letter-spacing:-.06em;line-height:.98;margin:10px 0 14px}
 .kicker{text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:800;color:#58704c}
-.sub{font-size:1.05rem;color:#62685d;max-width:620px;line-height:1.6}
+em{font-style:italic}.sub{font-size:1.05rem;color:#62685d;max-width:620px;line-height:1.6}
 .progress{height:8px;background:#e1ddd2;border-radius:9px;overflow:hidden;margin:22px 0 8px}.bar{height:100%;width:0;background:#58704c;transition:width .2s}
 .meta{display:flex;justify-content:space-between;color:#6c7168;font-size:.85rem}
 h2{font-size:1.3rem;letter-spacing:-.03em;margin:28px 0 12px}
@@ -36,13 +36,13 @@ footer{margin-top:40px;color:#85897f;font-size:.8rem}
 </style>
 </head>
 <body><main class="wrap">
-<header><div class="kicker">LAF · Laboratoire Albert Fert</div><h1>Rank the<br>LAF vegetables.</h1><p class="sub">The LAF (Laboratoire Albert Fert) vegetable tier list. Forty vegetables. Six tiers. Rank your favourites, skip the rest, and help the LAF community settle the most important debate in the laboratory.</p></header><button class="result-button" id="see-results" type="button">See public mean results ↓</button>
-<section aria-label="Your rankings"><div class="progress"><div class="bar" id="bar"></div></div><div class="meta"><span id="count">0 of 40 ranked</span><span>Rank any number you like</span></div>
-<h2>Build your tier list</h2><p class="note">Drag vegetables into a tier. On a phone, tap a vegetable, then tap its tier. Leave anything you don’t want to rate in the tray below.</p><div class="tiers" id="items"></div><div class="pool"><h2>Not ranked yet</h2><p>Leave vegetables here if you can’t be bothered to rank them.</p><div class="tile-zone" id="unranked"></div></div>
-<div class="actions"><button class="primary" id="submit" disabled>Submit my ranking</button><button class="secondary" id="reset" type="button">Reset</button></div>
-<p class="note">Submissions are anonymous. Rank as few or as many as you like. Only ranked vegetables count towards their mean score.</p><div id="status" role="status"></div></section>
-<section class="leaderboard" id="mean-results"><div class="kicker">The voice of the people</div><h2>Community mean results</h2><p class="note">Mean score for each vegetable, using only submissions that ranked it (S = 6, F = 1).</p><div id="board" class="note">Leaderboard will appear once the database is connected.</div></section>
-<footer>LAF Vegetable Tier List · Laboratoire Albert Fert · Anonymous community survey · Vegetable photographs sourced from <a href="https://commons.wikimedia.org/wiki/Category:Vegetables_by_common_name" target="_blank" rel="noopener">Wikimedia Commons</a>; individual file licences and credits are available on each file page.</footer>
+<header><div class="kicker">LAF · Laboratoire Albert Fert</div><h1>Classez les<br>légumes du LAF.</h1><p class="sub">Le classement des légumes du LAF (Laboratoire Albert Fert). Quarante légumes. Six catégories. Classez vos préférés, ignorez les autres et aidez la communauté du LAF à trancher le débat le plus important du laboratoire. <em>The LAF vegetable tier list. Forty vegetables. Six tiers. Rank your favourites, skip the rest, and help the LAF community settle the most important debate in the laboratory.</em></p></header><button class="result-button" id="see-results" type="button">Voir les résultats moyens ↓ <em>(See public mean results)</em></button>
+<section aria-label="Your rankings"><div class="progress"><div class="bar" id="bar"></div></div><div class="meta"><span id="count">0 sur 40 classés <em>(0 of 40 ranked)</em></span><span>Classez autant de légumes que vous voulez <em>(Rank any number you like)</em></span></div>
+<h2>Créez votre classement <em>(Build your tier list)</em></h2><p class="note">Faites glisser les légumes dans une catégorie. Sur téléphone, touchez un légume, puis la catégorie souhaitée. Laissez dans le bac ci-dessous ceux que vous ne souhaitez pas noter. <em>Drag vegetables into a tier. On a phone, tap a vegetable, then tap its tier. Leave anything you don’t want to rate in the tray below.</em></p><div class="tiers" id="items"></div><div class="pool"><h2>Pas encore classés <em>(Not ranked yet)</em></h2><p>Laissez ici les légumes que vous n’avez pas envie de classer. <em>Leave vegetables here if you can’t be bothered to rank them.</em></p><div class="tile-zone" id="unranked"></div></div>
+<div class="actions"><button class="primary" id="submit" disabled>Envoyer mon classement <em>(Submit my ranking)</em></button><button class="secondary" id="reset" type="button">Réinitialiser <em>(Reset)</em></button></div>
+<p class="note">Les réponses sont anonymes. Classez autant de légumes que vous le souhaitez. Seuls les légumes classés contribuent à leur score moyen. <em>Submissions are anonymous. Rank as few or as many as you like. Only ranked vegetables count towards their mean score.</em></p><div id="status" role="status"></div></section>
+<section class="leaderboard" id="mean-results"><div class="kicker">La voix du peuple <em>(The voice of the people)</em></div><h2>Résultats moyens de la communauté <em>(Community mean results)</em></h2><p class="note">Score moyen de chaque légume, calculé uniquement à partir des réponses qui l’ont classé (S = 6, F = 1). <em>Mean score for each vegetable, using only submissions that ranked it.</em></p><div id="board" class="note">Le classement apparaîtra dès que la base de données sera connectée. <em>Leaderboard will appear once the database is connected.</em></div></section>
+<footer>Classement des légumes du LAF · Laboratoire Albert Fert · Sondage communautaire anonyme · Photos des légumes provenant de <a href="https://commons.wikimedia.org/wiki/Category:Vegetables_by_common_name" target="_blank" rel="noopener">Wikimedia Commons</a>; individual file licences and credits are available on each file page.</footer>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -133,8 +133,8 @@ function makeTile(v){
  if(src){const im=document.createElement("img");im.alt=v;im.loading="lazy";const showEmoji=()=>{if(!im.isConnected)return;const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";im.replaceWith(em)};im.onerror=()=>{if(im.dataset.fallbackTried!=="yes"&&src){im.dataset.fallbackTried="yes";im.src=src;return}if(im.dataset.commonsTried!=="yes"){im.dataset.commonsTried="yes";getCommonsImage(v).then(url=>{if(url&&im.isConnected)im.src=url;else showEmoji()}).catch(showEmoji);return}showEmoji()};el.append(im);getWikiImage(v).then(url=>{if(im.isConnected)im.src=url||src}).catch(()=>{if(im.isConnected)im.src=src})}
  else{const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";el.append(em)}
  const label=document.createElement("span");label.textContent=v;el.append(label);
- const select=document.createElement("select");select.setAttribute("aria-label","Choose tier for "+v);
- select.innerHTML='<option value="">Unranked</option>'+TIERS.map(t=>'<option value="'+t+'">'+t+' tier</option>').join("");
+ const select=document.createElement("select");select.setAttribute("aria-label","Choisir une catégorie pour "+v);
+ select.innerHTML='<option value="">Unranked</option>'+TIERS.map(t=>'<option value="'+t+'">Catégorie '+t+'</option>').join("");
  select.value=picks[v]||"";select.onclick=e=>e.stopPropagation();select.onchange=e=>{e.stopPropagation();assign(v,select.value||null)};el.append(select);
  return el;
 }
@@ -142,23 +142,23 @@ function render(){document.querySelectorAll(".tile-zone").forEach(z=>z.replaceCh
 function assign(v,t){if(!v)return;if(t)picks[v]=t;else delete picks[v];selectedVeg=null;render()}
 document.querySelectorAll(".tier").forEach(row=>{row.ondragover=e=>{e.preventDefault();row.classList.add("drag-over")};row.ondragleave=()=>row.classList.remove("drag-over");row.ondrop=e=>{e.preventDefault();row.classList.remove("drag-over");assign(e.dataTransfer.getData("text/plain"),row.dataset.tier)};row.onclick=e=>{if(selectedVeg&&!e.target.closest(".veg-tile"))assign(selectedVeg,row.dataset.tier)}});
 $("unranked").ondragover=e=>e.preventDefault();$("unranked").ondrop=e=>{e.preventDefault();assign(e.dataTransfer.getData("text/plain"),null)};$("unranked").onclick=e=>{if(selectedVeg&&!e.target.closest(".veg-tile"))assign(selectedVeg,null)};
-function update(){const n=Object.keys(picks).length;$("count").textContent=n+" of "+VEGETABLES.length+" ranked";$("bar").style.width=(n/VEGETABLES.length*100)+"%";$("submit").disabled=n===0}
+function update(){const n=Object.keys(picks).length;$("count").innerHTML=n+" sur "+VEGETABLES.length+" classés <em>("+n+" of "+VEGETABLES.length+" ranked)</em>";$("bar").style.width=(n/VEGETABLES.length*100)+"%";$("submit").disabled=n===0}
 render();
 function status(msg,kind){$("status").textContent=msg;$("status").className=kind}
-async function loadBoard(){if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){$("board").textContent="Database setup is pending.";return}
+async function loadBoard(){if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){$("board").innerHTML="Configuration de la base de données en attente. <em>(Database setup is pending.)</em>";return}
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
  const {data,error}=await client.rpc("vegetable_leaderboard");
- if(error){$("board").textContent="Leaderboard temporarily unavailable.";return}
- if(!data?.length){$("board").textContent="No rankings yet — be the first!";return}
+ if(error){$("board").innerHTML="Classement temporairement indisponible. <em>(Leaderboard temporarily unavailable.)</em>";return}
+ if(!data?.length){$("board").innerHTML="Aucun classement pour le moment — soyez le premier ! <em>(No rankings yet — be the first!)</em>";return}
  $("board").innerHTML='<table><thead><tr><th>Rank</th><th>Vegetable</th><th>Mean score</th><th>Rankings</th></tr></thead><tbody>'+data.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.vegetable)+'</td><td>'+Number(r.average_score).toFixed(2)+'</td><td>'+r.votes+'</td></tr>').join("")+'</tbody></table>';
 }
 $("submit").onclick=async()=>{if(Object.keys(picks).length===0)return;
- if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){status("The page is ready, but the database has not been connected yet. Your ranking has not been submitted.","err");return}
- $("submit").disabled=true;status("Submitting…","");
+ if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){status("La page est prête, mais la base de données n’est pas encore connectée. Votre classement n’a pas été envoyé. (The page is ready, but the database has not been connected yet. Your ranking has not been submitted.)","err");return}
+ $("submit").disabled=true;status("Envoi en cours… (Submitting…)","");
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
  const {error}=await client.from("vegetable_submissions").insert({rankings:picks});
- if(error){status("Could not submit: "+error.message,"err");$("submit").disabled=false;return}
- status("Thanks! Your anonymous ranking has been recorded ("+Object.keys(picks).length+" vegetables ranked).","ok");$("submit").disabled=true;$("reset").disabled=true;await loadBoard();
+ if(error){status("Envoi impossible : "+error.message+" (Could not submit)","err");$("submit").disabled=false;return}
+ status("Merci ! Votre classement anonyme a été enregistré ("+Object.keys(picks).length+" légumes classés). (Thanks! Your anonymous ranking has been recorded.)","ok");$("submit").disabled=true;$("reset").disabled=true;await loadBoard();
 };
 $("see-results").onclick=()=>{$("mean-results").scrollIntoView({behavior:"smooth"});loadBoard()};loadBoard();update();
 </script></body></html>
