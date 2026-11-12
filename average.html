@@ -176,14 +176,15 @@ async function buildExportSvg(){
  const visibleCards=tiers.flatMap(section=>[...section.querySelectorAll(".veg")]);
  await Promise.all(visibleCards.map(async card=>{
   const name=card.querySelector(".name")?.childNodes[0]?.textContent?.trim();
-  const url=FRUIT360[name];if(!url)return;
+  const en=card.querySelector(".name em")?.textContent||name;
+  const url=FRUIT360[en];if(!url)return;
   try{
    const response=await fetch(url,{mode:"cors"});if(!response.ok)throw new Error("image unavailable");
    const blob=await response.blob();
-   imageData[name]=await new Promise((resolve,reject)=>{
+   imageData[en]=await new Promise((resolve,reject)=>{
     const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);
    });
-  }catch(e){imageData[name]=null;}
+  }catch(e){imageData[en]=null;}
  }));
  for(const section of tiers){
   const tier=section.dataset.tier;
@@ -201,7 +202,7 @@ async function buildExportSvg(){
    const score=sc?.textContent?.trim()||"";
    const emoji=card.querySelector(".emoji")?.textContent||"🥬";
    parts.push('<rect x="'+x+'" y="'+cy+'" width="'+cardW+'" height="'+cardH+'" rx="9" fill="#fff" stroke="#e8e3d9"/>');
-   if(imageData[name])parts.push('<image href="'+imageData[name]+'" x="'+(x+7)+'" y="'+(cy+9)+'" width="34" height="34" preserveAspectRatio="xMidYMid meet"/>');
+   if(imageData[en])parts.push('<image href="'+imageData[name]+'" x="'+(x+7)+'" y="'+(cy+9)+'" width="34" height="34" preserveAspectRatio="xMidYMid meet"/>');
    else parts.push('<text x="'+(x+9)+'" y="'+(cy+31)+'" font-family="Arial,sans-serif" font-size="19">'+xml(emoji)+'</text>');
    parts.push('<text x="'+(x+47)+'" y="'+(cy+22)+'" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#20251f">'+xml(name)+'</text>');
    parts.push('<text x="'+(x+47)+'" y="'+(cy+37)+'" font-family="Arial,sans-serif" font-size="10" fill="#7041a6">'+xml(en)+'</text>');
