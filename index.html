@@ -48,6 +48,7 @@ footer{margin-top:40px;color:#85897f;font-size:.8rem}
 <script>
 const VEGETABLES = ["Artichoke","Asparagus","Aubergine","Beetroot","Bell pepper","Broccoli","Brussels sprouts","Cabbage","Carrot","Cauliflower","Celery","Chard","Chicory","Corn","Cucumber","Fennel","Garlic","Green beans","Kale","Leek","Lettuce","Mushroom","Okra","Onion","Parsnip","Peas","Potato","Pumpkin","Radish","Spinach","Sweet potato","Tomato","Turnip","Zucchini","Bok choy","Butternut squash","Celeriac","Kohlrabi","Shallot","Watercress"];
 const TIERS = ["S","A","B","C","D","F"];
+const FRENCH_NAMES={"Artichoke":"Artichaut","Asparagus":"Asperge","Aubergine":"Aubergine","Beetroot":"Betterave","Bell pepper":"Poivron","Broccoli":"Brocoli","Brussels sprouts":"Choux de Bruxelles","Cabbage":"Chou","Carrot":"Carotte","Cauliflower":"Chou-fleur","Celery":"Céleri","Chard":"Bette","Chicory":"Chicorée","Corn":"Maïs","Cucumber":"Concombre","Fennel":"Fenouil","Garlic":"Ail","Green beans":"Haricots verts","Kale":"Chou kale","Leek":"Poireau","Lettuce":"Laitue","Mushroom":"Champignon","Okra":"Gombo","Onion":"Oignon","Parsnip":"Panais","Peas":"Petits pois","Potato":"Pomme de terre","Pumpkin":"Potiron","Radish":"Radis","Spinach":"Épinards","Sweet potato":"Patate douce","Tomato":"Tomate","Turnip":"Navet","Zucchini":"Courgette","Bok choy":"Pak-choï","Butternut squash":"Courge butternut","Celeriac":"Céleri-rave","Kohlrabi":"Chou-rave","Shallot":"Échalote","Watercress":"Cresson"};
 const SUPABASE_URL = "https://dpnzgpmlbdrlwackyafa.supabase.co"; // Set after creating the Supabase project.
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_838VhmZlihiFPH5OU34shQ_Aaai2Fhz"; // Public publishable key only; never put a secret/service_role key here.
 
@@ -65,7 +66,7 @@ async function getCommonsImage(v){
   const pages=Object.values(data.query?.pages||{}).filter(p=>p.imageinfo?.[0]&&!/(flower|blossom|seedling|field of|botanical illustration)/i.test(p.title));
   const key=v.toLowerCase().replace(/[^a-z]/g,"");
   const exact=pages.find(p=>p.title.toLowerCase().replace(/[^a-z]/g,"").includes(key));
-  const chosen=exact;
+  const chosen=exact||pages[0];
   return chosen?.imageinfo?.[0]?.thumburl||chosen?.imageinfo?.[0]?.url||null;
  })();
  return commonsImageCache[v];
@@ -84,7 +85,7 @@ async function getWikiImage(v){
 const picks={};let selectedVeg=null;
 const esc = s => String(s).replace(/[&<>"\']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "\'":"&#39;"}[c]));
 const FRUIT360={
- "Artichoke":"https://commons.wikimedia.org/wiki/Special:FilePath/Artichokes.jpg?width=512",
+ "Artichoke":"https://commons.wikimedia.org/wiki/Special:FilePath/Artichokes_being_cooked.jpg?width=512",
  "Asparagus":"https://commons.wikimedia.org/wiki/Special:FilePath/Asparagus-Bundle.jpg?width=512",
  "Aubergine":"https://commons.wikimedia.org/wiki/Special:FilePath/Eggplant_3.jpg?width=512",
  "Beetroot":"https://commons.wikimedia.org/wiki/Special:FilePath/Beetroots_in_a_basket.jpg?width=512",
@@ -130,9 +131,9 @@ $("items").innerHTML=TIERS.map(t=>'<div class="tier" data-tier="'+t+'"><div clas
 function makeTile(v){
  const el=document.createElement("div");el.className="veg-tile";el.draggable=true;el.tabIndex=0;el.setAttribute("role","group");el.dataset.veg=v;
  const src=FRUIT360[v];
- if(src){const im=document.createElement("img");im.alt=v;im.loading="lazy";const showEmoji=()=>{if(!im.isConnected)return;const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";im.replaceWith(em)};im.onerror=()=>{if(im.dataset.commonsTried!=="yes"){im.dataset.commonsTried="yes";getCommonsImage(v).then(url=>{if(url&&im.isConnected)im.src=url;else showEmoji()}).catch(showEmoji);return}showEmoji()};el.append(im);im.src=src}
+ if(src){const im=document.createElement("img");im.alt=v;im.loading="lazy";const showEmoji=()=>{if(!im.isConnected)return;const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";im.replaceWith(em)};im.onerror=()=>{if(im.dataset.fallbackTried!=="yes"&&src){im.dataset.fallbackTried="yes";im.src=src;return}if(im.dataset.commonsTried!=="yes"){im.dataset.commonsTried="yes";getCommonsImage(v).then(url=>{if(url&&im.isConnected)im.src=url;else showEmoji()}).catch(showEmoji);return}showEmoji()};el.append(im);getWikiImage(v).then(url=>{if(im.isConnected)im.src=url||src}).catch(()=>{if(im.isConnected)im.src=src})}
  else{const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";el.append(em)}
- const label=document.createElement("span");label.textContent=v;el.append(label);
+ const label=document.createElement("span");label.innerHTML=esc(FRENCH_NAMES[v]||v)+'<br><em>'+esc(v)+'</em>';el.append(label);
  const select=document.createElement("select");select.setAttribute("aria-label","Choisir une catégorie pour "+v);
  select.innerHTML='<option value="">Non classé</option>'+TIERS.map(t=>'<option value="'+t+'">Catégorie '+t+'</option>').join("");
  select.value=picks[v]||"";select.onclick=e=>e.stopPropagation();select.onchange=e=>{e.stopPropagation();assign(v,select.value||null)};el.append(select);
@@ -150,7 +151,7 @@ async function loadBoard(){if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISH
  const {data,error}=await client.rpc("vegetable_leaderboard");
  if(error){$("board").innerHTML="Classement temporairement indisponible. <em>(Leaderboard temporarily unavailable.)</em>";return}
  if(!data?.length){$("board").innerHTML="Aucun classement pour le moment — soyez le premier ! <em>(No rankings yet — be the first!)</em>";return}
- $("board").innerHTML='<table><thead><tr><th>Rank</th><th>Vegetable</th><th>Mean score</th><th>Rankings</th></tr></thead><tbody>'+data.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.vegetable)+'</td><td>'+Number(r.average_score).toFixed(2)+'</td><td>'+r.votes+'</td></tr>').join("")+'</tbody></table>';
+ $("board").innerHTML='<table><thead><tr><th>Rank</th><th>Vegetable</th><th>Mean score</th><th>Rankings</th></tr></thead><tbody>'+data.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(FRENCH_NAMES[r.vegetable]||r.vegetable)+' <em>('+esc(r.vegetable)+')</em></td><td>'+Number(r.average_score).toFixed(2)+'</td><td>'+r.votes+'</td></tr>').join("")+'</tbody></table>';
 }
 $("submit").onclick=async()=>{if(Object.keys(picks).length===0)return;
  if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){status("La page est prête, mais la base de données n’est pas encore connectée. Votre classement n’a pas été envoyé. (The page is ready, but the database has not been connected yet. Your ranking has not been submitted.)","err");return}
