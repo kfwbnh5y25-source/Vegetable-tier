@@ -46,7 +46,7 @@ h1 span{color:#58704c}
 .name{font-size:.68rem;line-height:1.12}
 .name em{font-size:.59rem}
 .score{font-size:.61rem}
-footer{border-top:1px solid #d8d3c7;padding-top:9px}
+footer{border-top:1px solid #d8d3c7;padding-top:9px}.icon-credit{font-size:.72rem;color:#85897f}.icon-credit a{color:#58704c;font-weight:700}
 @media(max-width:620px){
  .wrap{padding:10px 8px 22px}.hero{padding:16px 2px 13px}.hero-note{font-size:.5rem}
  h1{font-size:clamp(2.3rem,12vw,3.2rem);margin:15px 0 10px}
@@ -63,7 +63,7 @@ footer{border-top:1px solid #d8d3c7;padding-top:9px}
 <div class="meta"><span id="summary">Chargement des résultats… <em>(Loading results…)</em></span><div><button id="refresh" type="button">Actualiser · Refresh</button> <button id="export" type="button">Exporter en PNG · Export screenshot</button></div></div>
 <div class="legend"><strong>Score moyen → tier :</strong> 5,5–6 S · 4,5–&lt;5,5 A · 3,5–&lt;4,5 B · 2,5–&lt;3,5 C · 1,5–&lt;2,5 D · 1–&lt;1,5 F. <em>Nearest-tier rounding; ties kept. Sorted by mean within each tier.</em></div>
 <div class="tiers" id="tiers"></div>
-<footer>Mis à jour à chaque actualisation · Les moyennes utilisent uniquement les réponses qui ont classé chaque légume. <em>Updated on refresh · Means include only submissions that ranked that vegetable.</em></footer>
+<footer>Mis à jour à chaque actualisation · Les moyennes utilisent uniquement les réponses qui ont classé chaque légume. <em>Updated on refresh · Means include only submissions that ranked that vegetable.</em><br><span class="icon-credit">Icônes végétales : <a href="https://github.com/openfarmcc/open-crop-icons" target="_blank" rel="noopener">Open Crop Icons</a> · CC0 1.0 (domaine public).</span></footer>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
@@ -111,7 +111,7 @@ const FRUIT360={
  "Shallot":"https://commons.wikimedia.org/wiki/Special:FilePath/Shallots.jpg?width=512",
  "Watercress":"https://commons.wikimedia.org/wiki/Special:FilePath/Watercress.jpg?width=512"
 };
-const CROP_ICON_BASE="https://raw.githubusercontent.com/openfarmcc/open-crop-icons/mainline/icons/";
+const CROP_ICON_BASE="./assets/crop-icons/";
 const CROP_ICON_FILES={
  "Asparagus":"asparagus/asparagus.svg","Aubergine":"eggplant/eggplant.svg","Beetroot":"beet/beet.svg","Bell pepper":"green-bell-pepper/green-bell-pepper.svg",
  "Broccoli":"broccoli/broccoli.svg","Brussels sprouts":"brussel-sprout/brussel-sprout.svg","Cabbage":"green-cabbage/green-cabbage.svg","Carrot":"carrot/carrot.svg",
@@ -135,7 +135,7 @@ function customCropSvg(v){
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#f0f3e8"/><text x="32" y="45" text-anchor="middle" font-size="39">'+glyph+'</text></svg>';
 }
 function cropIconUrl(v){
- if(CROP_ICON_FILES[v])return CROP_ICON_BASE+CROP_ICON_FILES[v];
+ if(CROP_ICON_FILES[v])return CROP_ICON_BASE+v.toLowerCase().replace(/[^a-z0-9]+/g,"-")+".svg";
  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(customCropSvg(v));
 }
 const EMOJI={"Artichoke":"🌿","Asparagus":"🥦","Aubergine":"🍆","Beetroot":"🫜","Bell pepper":"🫑","Broccoli":"🥦","Brussels sprouts":"🥦","Cabbage":"🥗","Carrot":"🥕","Cauliflower":"🥦","Celery":"🥗","Chard":"🍃","Chicory":"🌱","Corn":"🌽","Cucumber":"🥒","Fennel":"🌿","Garlic":"🧄","Green beans":"🫛","Kale":"🍃","Leek":"🧅","Lettuce":"🥬","Mushroom":"🍄","Okra":"🫛","Onion":"🧅","Parsnip":"🥕","Peas":"🫛","Potato":"🥔","Pumpkin":"🎃","Radish":"🥕","Spinach":"🍃","Sweet potato":"🍠","Tomato":"🍅","Turnip":"🫜","Zucchini":"🥒","Bok choy":"🌱","Butternut squash":"🎃","Celeriac":"🥔","Kohlrabi":"🌱","Shallot":"🧅","Watercress":"🌱"};
