@@ -200,9 +200,9 @@ async function buildExportSvg(){
    const name=n?.childNodes[0]?.textContent?.trim()||"";
    const en=n?.querySelector("em")?.textContent||"";
    const score=sc?.textContent?.trim()||"";
-   const emoji=card.querySelector(".emoji")?.textContent||"🥬";
+   const emoji=card.querySelector(".emoji")?.textContent||EMOJI[en]||"🥬";
    parts.push('<rect x="'+x+'" y="'+cy+'" width="'+cardW+'" height="'+cardH+'" rx="9" fill="#fff" stroke="#e8e3d9"/>');
-   if(imageData[en])parts.push('<image href="'+imageData[name]+'" x="'+(x+7)+'" y="'+(cy+9)+'" width="34" height="34" preserveAspectRatio="xMidYMid meet"/>');
+   if(imageData[en])parts.push('<image href="'+imageData[en]+'" x="'+(x+7)+'" y="'+(cy+9)+'" width="34" height="34" preserveAspectRatio="xMidYMid meet"/>');
    else parts.push('<text x="'+(x+9)+'" y="'+(cy+31)+'" font-family="Arial,sans-serif" font-size="19">'+xml(emoji)+'</text>');
    parts.push('<text x="'+(x+47)+'" y="'+(cy+22)+'" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#20251f">'+xml(name)+'</text>');
    parts.push('<text x="'+(x+47)+'" y="'+(cy+37)+'" font-family="Arial,sans-serif" font-size="10" fill="#7041a6">'+xml(en)+'</text>');
