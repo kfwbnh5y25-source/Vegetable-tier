@@ -136,17 +136,38 @@ function showMobileExport(blob){
  actions.append(share);overlay.append(help,img,actions);document.body.append(overlay);
 }
 document.getElementById("export").addEventListener("click",async()=>{
- const btn=document.getElementById("export");btn.disabled=true;btn.textContent="Préparation…";
+ const btn=document.getElementById("export");
+ const mobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+ btn.disabled=true;
+ const stage=s=>{btn.textContent=s};
  try{
-  if(document.fonts?.ready)await document.fonts.ready;
-  await Promise.all([...document.querySelectorAll("#tiers img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=img.onerror=resolve;setTimeout(resolve,5000)})));
-  const canvas=await html2canvas(document.querySelector("main"),{backgroundColor:"#f5f1e8",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:Math.max(document.documentElement.clientWidth,document.documentElement.scrollWidth)});
-  const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("PNG conversion failed")),"image/png"));
-  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-  if(isMobile){showMobileExport(blob);}
+  stage("Préparation… · Preparing…");
+  if(document.fonts?.ready)await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2500))]);
+  stage("Création de l’image… · Creating image…");
+  const target=document.querySelector("main");
+  const width=Math.max(document.documentElement.clientWidth,document.documentElement.scrollWidth);
+  const render=html2canvas(target,{
+   backgroundColor:"#f5f1e8",scale:mobile?1:2,useCORS:!mobile,allowTaint:false,
+   logging:false,imageTimeout:3500,windowWidth:mobile?document.documentElement.clientWidth:width,
+   onclone:doc=>{
+    if(mobile)doc.querySelectorAll("#tiers img").forEach(img=>{
+     const fallback=doc.createElement("span");fallback.className="emoji";fallback.textContent="🥬";
+     fallback.style.cssText="font-size:19px;line-height:23px;grid-row:1 / 3";
+     img.replaceWith(fallback);
+    });
+   }
+  });
+  const canvas=await Promise.race([render,new Promise((_,reject)=>setTimeout(()=>reject(new Error("Render timed out")),25000))]);
+  stage("Finalisation… · Finishing…");
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(x=>x?resolve(x):reject(new Error("PNG conversion failed")),"image/png"));
+  if(mobile){showMobileExport(blob);}
   else{const url=URL.createObjectURL(blob);const link=document.createElement("a");link.download="LAF-vegetable-average-tier-list.png";link.href=url;link.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
- }catch(e){alert("Export impossible. Réessayez ou utilisez Imprimer → Enregistrer en PDF. (Export failed; please retry or use Print → Save as PDF.)")}
- finally{btn.disabled=false;btn.textContent="Exporter en PNG · Export screenshot"}
+ }catch(e){
+  console.error("PNG export failed",e);
+  alert("L’export a échoué. Essayez à nouveau. (Export failed; please try again.)");
+ }finally{
+  btn.disabled=false;btn.textContent="Exporter en PNG · Export screenshot";
+ }
 });
 load();
 </script></body></html>
