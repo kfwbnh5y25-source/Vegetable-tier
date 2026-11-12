@@ -77,6 +77,7 @@ footer{font-size:.86rem;line-height:1.6}
  table{font-size:.82rem}
  td,th{padding:10px 8px}
 }
+.summary-embed{padding:0!important;margin-top:28px;border:0!important;background:transparent!important;overflow:hidden}#summary-frame{display:block;width:100%;height:900px;border:0;border-radius:14px;background:#f5f1e8;overflow:hidden}
 </style>
 </head>
 <body><main class="wrap">
@@ -85,7 +86,7 @@ footer{font-size:.86rem;line-height:1.6}
 <h2>Créez votre classement <em>(Build your tier list)</em></h2><p class="note">Faites glisser les légumes dans une catégorie. Sur téléphone, touchez un légume, puis la catégorie souhaitée. Laissez dans le bac ci-dessous ceux que vous ne souhaitez pas noter. <em>Drag vegetables into a tier. On a phone, tap a vegetable, then tap its tier. Leave anything you don’t want to rate in the tray below.</em></p><div class="tiers" id="items"></div><div class="pool"><h2>Pas encore classés <em>(Not ranked yet)</em></h2><p>Laissez ici les légumes que vous n’avez pas envie de classer. <em>Leave vegetables here if you can’t be bothered to rank them.</em></p><div class="tile-zone" id="unranked"></div></div>
 <div class="actions"><button class="primary" id="submit" disabled>Envoyer mon classement <em>(Submit my ranking)</em></button><button class="secondary" id="reset" type="button">Réinitialiser <em>(Reset)</em></button></div>
 <p class="note">Les réponses sont anonymes. Classez autant de légumes que vous le souhaitez. Seuls les légumes classés contribuent à leur score moyen. <em>Submissions are anonymous. Rank as few or as many as you like. Only ranked vegetables count towards their mean score.</em></p><div id="status" role="status"></div></section>
-<section class="leaderboard" id="mean-results"><div class="kicker">La voix du peuple <em>(The voice of the people)</em></div><h2>Résultats moyens de la communauté <em>(Community mean results)</em></h2><p class="note">Score moyen de chaque légume, calculé uniquement à partir des réponses qui l’ont classé (S = 6, F = 1). <em>Mean score for each vegetable, using only submissions that ranked it.</em></p><div id="board" class="note">Le classement apparaîtra dès que la base de données sera connectée. <em>Leaderboard will appear once the database is connected.</em></div></section>
+<section class="leaderboard summary-embed" id="mean-results" aria-label="Résultats de la communauté"><iframe id="summary-frame" title="The people have spoken — community vegetable tier list" src="./average.html?embed=1" loading="eager"></iframe></section>
 <footer>Classement des légumes du LAF · Laboratoire Albert Fert · Sondage communautaire anonyme · Photos des légumes provenant de <a href="https://commons.wikimedia.org/wiki/Category:Vegetables_by_common_name" target="_blank" rel="noopener">Wikimedia Commons</a>; les licences et crédits de chaque image sont disponibles sur sa page. <em>Individual file licences and credits are available on each file page.</em></footer>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -190,20 +191,15 @@ $("unranked").ondragover=e=>e.preventDefault();$("unranked").ondrop=e=>{e.preven
 function update(){const n=Object.keys(picks).length;$("count").innerHTML=n+" sur "+VEGETABLES.length+" classés <em>("+n+" of "+VEGETABLES.length+" ranked)</em>";$("bar").style.width=(n/VEGETABLES.length*100)+"%";$("submit").disabled=n===0}
 render();
 function status(msg,kind){$("status").textContent=msg;$("status").className=kind}
-async function loadBoard(){if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){$("board").innerHTML="Configuration de la base de données en attente. <em>(Database setup is pending.)</em>";return}
- const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
- const {data,error}=await client.rpc("vegetable_leaderboard");
- if(error){$("board").innerHTML="Classement temporairement indisponible. <em>(Leaderboard temporarily unavailable.)</em>";return}
- if(!data?.length){$("board").innerHTML="Aucun classement pour le moment — soyez le premier ! <em>(No rankings yet — be the first!)</em>";return}
- $("board").innerHTML='<table><thead><tr><th>Rank</th><th>Vegetable</th><th>Mean score</th><th>Rankings</th></tr></thead><tbody>'+data.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(FRENCH_NAMES[r.vegetable]||r.vegetable)+' <em>('+esc(r.vegetable)+')</em></td><td>'+Number(r.average_score).toFixed(2)+'</td><td>'+r.votes+'</td></tr>').join("")+'</tbody></table>';
-}
+function refreshSummary(){const frame=$("summary-frame");if(frame)frame.src="./average.html?embed=1&t="+Date.now()}
+
 $("submit").onclick=async()=>{if(Object.keys(picks).length===0)return;
  if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){status("La page est prête, mais la base de données n’est pas encore connectée. Votre classement n’a pas été envoyé. (The page is ready, but the database has not been connected yet. Your ranking has not been submitted.)","err");return}
  $("submit").disabled=true;status("Envoi en cours… (Submitting…)","");
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
  const {error}=await client.from("vegetable_submissions").insert({rankings:picks});
  if(error){status("Envoi impossible : "+error.message+" (Could not submit)","err");$("submit").disabled=false;return}
- status("Merci ! Votre classement anonyme a été enregistré ("+Object.keys(picks).length+" légumes classés). (Thanks! Your anonymous ranking has been recorded.)","ok");$("submit").disabled=true;$("reset").disabled=true;await loadBoard();
+ status("Merci ! Votre classement anonyme a été enregistré ("+Object.keys(picks).length+" légumes classés). (Thanks! Your anonymous ranking has been recorded.)","ok");$("submit").disabled=true;$("reset").disabled=true;refreshSummary();
 };
-$("see-results").onclick=()=>{$("mean-results").scrollIntoView({behavior:"smooth"});loadBoard()};loadBoard();update();
+$("see-results").onclick=()=>{$("mean-results").scrollIntoView({behavior:"smooth"})};const summaryFrame=$("summary-frame");window.addEventListener("message",event=>{if(event.source!==summaryFrame.contentWindow||event.data?.type!=="laf-summary-height")return;summaryFrame.style.height=Math.min(5000,Math.max(650,Number(event.data.height)||900))+"px"});update();
 </script></body></html>
