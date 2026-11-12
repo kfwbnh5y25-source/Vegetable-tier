@@ -11,7 +11,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The LAF Vegetable Tier List">
 <meta name="twitter:description" content="Forty vegetables enter. One tier list leaves. Help the LAF community decide which vegetables deserve greatness — and which belong in the compost.">
-<title>LAF Vegetable Tier List — The Voice of the People</title>
+<title>Classement des légumes du LAF — La voix du peuple | LAF Vegetable Tier List</title>
 <style>
 :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;color:#20251f;background:#f5f1e8;font-synthesis:none}
 *{box-sizing:border-box}body{margin:0}.wrap{max-width:900px;margin:auto;padding:34px 18px 70px}
@@ -42,7 +42,7 @@ footer{margin-top:40px;color:#85897f;font-size:.8rem}
 <div class="actions"><button class="primary" id="submit" disabled>Envoyer mon classement <em>(Submit my ranking)</em></button><button class="secondary" id="reset" type="button">Réinitialiser <em>(Reset)</em></button></div>
 <p class="note">Les réponses sont anonymes. Classez autant de légumes que vous le souhaitez. Seuls les légumes classés contribuent à leur score moyen. <em>Submissions are anonymous. Rank as few or as many as you like. Only ranked vegetables count towards their mean score.</em></p><div id="status" role="status"></div></section>
 <section class="leaderboard" id="mean-results"><div class="kicker">La voix du peuple <em>(The voice of the people)</em></div><h2>Résultats moyens de la communauté <em>(Community mean results)</em></h2><p class="note">Score moyen de chaque légume, calculé uniquement à partir des réponses qui l’ont classé (S = 6, F = 1). <em>Mean score for each vegetable, using only submissions that ranked it.</em></p><div id="board" class="note">Le classement apparaîtra dès que la base de données sera connectée. <em>Leaderboard will appear once the database is connected.</em></div></section>
-<footer>Classement des légumes du LAF · Laboratoire Albert Fert · Sondage communautaire anonyme · Photos des légumes provenant de <a href="https://commons.wikimedia.org/wiki/Category:Vegetables_by_common_name" target="_blank" rel="noopener">Wikimedia Commons</a>; individual file licences and credits are available on each file page.</footer>
+<footer>Classement des légumes du LAF · Laboratoire Albert Fert · Sondage communautaire anonyme · Photos des légumes provenant de <a href="https://commons.wikimedia.org/wiki/Category:Vegetables_by_common_name" target="_blank" rel="noopener">Wikimedia Commons</a>; les licences et crédits de chaque image sont disponibles sur sa page. <em>Individual file licences and credits are available on each file page.</em></footer>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -134,7 +134,7 @@ function makeTile(v){
  else{const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";el.append(em)}
  const label=document.createElement("span");label.textContent=v;el.append(label);
  const select=document.createElement("select");select.setAttribute("aria-label","Choisir une catégorie pour "+v);
- select.innerHTML='<option value="">Unranked</option>'+TIERS.map(t=>'<option value="'+t+'">Catégorie '+t+'</option>').join("");
+ select.innerHTML='<option value="">Non classé</option>'+TIERS.map(t=>'<option value="'+t+'">Catégorie '+t+'</option>').join("");
  select.value=picks[v]||"";select.onclick=e=>e.stopPropagation();select.onchange=e=>{e.stopPropagation();assign(v,select.value||null)};el.append(select);
  return el;
 }
