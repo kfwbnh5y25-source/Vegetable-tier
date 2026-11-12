@@ -112,34 +112,48 @@ const FRUIT360={
  "Watercress":"https://commons.wikimedia.org/wiki/Special:FilePath/Watercress.jpg?width=512"
 };
 const EMOJI={"Artichoke":"🥬","Asparagus":"🥦","Aubergine":"🍆","Beetroot":"🫜","Bell pepper":"🫑","Broccoli":"🥦","Brussels sprouts":"🥬","Cabbage":"🥬","Carrot":"🥕","Cauliflower":"🥦","Celery":"🥬","Chard":"🥬","Chicory":"🥬","Corn":"🌽","Cucumber":"🥒","Fennel":"🥬","Garlic":"🧄","Green beans":"🫛","Kale":"🥬","Leek":"🥬","Lettuce":"🥬","Mushroom":"🍄","Okra":"🫛","Onion":"🧅","Parsnip":"🥕","Peas":"🫛","Potato":"🥔","Pumpkin":"🎃","Radish":"🥕","Spinach":"🥬","Sweet potato":"🍠","Tomato":"🍅","Turnip":"🫜","Zucchini":"🥒","Bok choy":"🥬","Butternut squash":"🎃","Celeriac":"🥔","Kohlrabi":"🥬","Shallot":"🧅","Watercress":"🥬"};
-const WIKI_TITLES={"Aubergine":"Eggplant","Beetroot":"Beetroot","Bell pepper":"Bell_pepper","Brussels sprouts":"Brussels_sprout","Chard":"Chard","Corn":"Maize","Green beans":"Green_bean","Mushroom":"Mushroom","Peas":"Pea","Sweet potato":"Sweet_potato","Bok choy":"Bok_choy","Butternut squash":"Butternut_squash","Zucchini":"Zucchini"};
-const wikiImageCache={};
-const commonsImageCache={};
-async function getCommonsImage(v){
- if(!commonsImageCache[v]) commonsImageCache[v]=(async()=>{
-  const query="filetype:bitmap "+v+" vegetable";
-  const endpoint="https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch="+encodeURIComponent(query)+"&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url&iiurlwidth=512&format=json&origin=*";
-  const response=await fetch(endpoint,{headers:{Accept:"application/json"}});
-  if(!response.ok) throw new Error("Commons image lookup failed");
-  const data=await response.json();
-  const pages=Object.values(data.query?.pages||{}).filter(p=>p.imageinfo?.[0]&&!/(flower|blossom|seedling|field of|botanical illustration)/i.test(p.title));
-  const key=v.toLowerCase().replace(/[^a-z]/g,"");
-  const exact=pages.find(p=>p.title.toLowerCase().replace(/[^a-z]/g,"").includes(key));
-  const chosen=exact||pages[0];
-  return chosen?.imageinfo?.[0]?.thumburl||chosen?.imageinfo?.[0]?.url||null;
- })();
- return commonsImageCache[v];
-}
-async function getWikiImage(v){
- if(!wikiImageCache[v]) wikiImageCache[v]=(async()=>{
-  const title=WIKI_TITLES[v]||v.replace(/ /g,"_");
-  const response=await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(title),{headers:{Accept:"application/json"}});
-  if(!response.ok) throw new Error("Wikipedia image lookup failed");
-  const data=await response.json();
-  return data.thumbnail?.source||data.originalimage?.source||null;
- })();
- return wikiImageCache[v];
-}
+const FRUIT360={
+ "Artichoke":"https://commons.wikimedia.org/wiki/Special:FilePath/Artichokes_being_cooked.jpg?width=512",
+ "Asparagus":"https://commons.wikimedia.org/wiki/Special:FilePath/Asparagus-Bundle.jpg?width=512",
+ "Aubergine":"https://commons.wikimedia.org/wiki/Special:FilePath/Eggplant_3.jpg?width=512",
+ "Beetroot":"https://commons.wikimedia.org/wiki/Special:FilePath/Beetroots_in_a_basket.jpg?width=512",
+ "Bell pepper":"https://commons.wikimedia.org/wiki/Special:FilePath/Capsicum_annuum.jpg?width=512",
+ "Broccoli":"https://commons.wikimedia.org/wiki/Special:FilePath/Broccoli.jpg?width=512",
+ "Brussels sprouts":"https://commons.wikimedia.org/wiki/Special:FilePath/Brussels_sprouts.jpg?width=512",
+ "Cabbage":"https://commons.wikimedia.org/wiki/Special:FilePath/Cabbage.jpg?width=512",
+ "Carrot":"https://commons.wikimedia.org/wiki/Special:FilePath/Carrots.jpg?width=512",
+ "Cauliflower":"https://commons.wikimedia.org/wiki/Special:FilePath/Cauliflower.jpg?width=512",
+ "Celery":"https://commons.wikimedia.org/wiki/Special:FilePath/Celery.jpg?width=512",
+ "Chard":"https://commons.wikimedia.org/wiki/Special:FilePath/Swiss_chard.jpg?width=512",
+ "Chicory":"https://commons.wikimedia.org/wiki/Special:FilePath/Chicory.jpg?width=512",
+ "Corn":"https://commons.wikimedia.org/wiki/Special:FilePath/Corncobs.jpg?width=512",
+ "Cucumber":"https://commons.wikimedia.org/wiki/Special:FilePath/Cucumber.jpg?width=512",
+ "Fennel":"https://commons.wikimedia.org/wiki/Special:FilePath/Fennel.jpg?width=512",
+ "Garlic":"https://commons.wikimedia.org/wiki/Special:FilePath/Garlic.jpg?width=512",
+ "Green beans":"https://commons.wikimedia.org/wiki/Special:FilePath/Macro_of_Fresh_Green_Beans_Buncis.jpg?width=512",
+ "Kale":"https://commons.wikimedia.org/wiki/Special:FilePath/Boerenkool.jpg?width=512",
+ "Leek":"https://commons.wikimedia.org/wiki/Special:FilePath/Leek.jpg?width=512",
+ "Lettuce":"https://commons.wikimedia.org/wiki/Special:FilePath/Romaine_lettuce.jpg?width=512",
+ "Mushroom":"https://commons.wikimedia.org/wiki/Special:FilePath/2016-01_Agaricus_bisporus_07.jpg?width=512",
+ "Okra":"https://commons.wikimedia.org/wiki/Special:FilePath/Okra.jpg?width=512",
+ "Onion":"https://commons.wikimedia.org/wiki/Special:FilePath/Onion.jpg?width=512",
+ "Parsnip":"https://commons.wikimedia.org/wiki/Special:FilePath/Parsnip.jpg?width=512",
+ "Peas":"https://commons.wikimedia.org/wiki/Special:FilePath/Peas.jpg?width=512",
+ "Potato":"https://commons.wikimedia.org/wiki/Special:FilePath/Potato.jpg?width=512",
+ "Pumpkin":"https://commons.wikimedia.org/wiki/Special:FilePath/Pumpkin.jpg?width=512",
+ "Radish":"https://commons.wikimedia.org/wiki/Special:FilePath/Radishes_fresh_from_the_garden.jpg?width=512",
+ "Spinach":"https://commons.wikimedia.org/wiki/Special:FilePath/Spinach.jpg?width=512",
+ "Sweet potato":"https://commons.wikimedia.org/wiki/Special:FilePath/Sweet_potato.jpg?width=512",
+ "Tomato":"https://commons.wikimedia.org/wiki/Special:FilePath/Tomato.jpg?width=512",
+ "Turnip":"https://commons.wikimedia.org/wiki/Special:FilePath/Turnip_2622027.jpg?width=512",
+ "Zucchini":"https://commons.wikimedia.org/wiki/Special:FilePath/CSA-Striped-Zucchini.jpg?width=512",
+ "Bok choy":"https://commons.wikimedia.org/wiki/Special:FilePath/Bok_choy.jpg?width=512",
+ "Butternut squash":"https://commons.wikimedia.org/wiki/Special:FilePath/Cucurbita_moschata_Butternut.jpg?width=512",
+ "Celeriac":"https://commons.wikimedia.org/wiki/Special:FilePath/Celeriac_J1.jpg?width=512",
+ "Kohlrabi":"https://commons.wikimedia.org/wiki/Special:FilePath/Kohlrabi.jpg?width=512",
+ "Shallot":"https://commons.wikimedia.org/wiki/Special:FilePath/Shallots.jpg?width=512",
+ "Watercress":"https://commons.wikimedia.org/wiki/Special:FilePath/Watercress.jpg?width=512"
+};
 const SUPABASE_URL="https://dpnzgpmlbdrlwackyafa.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_838VhmZlihiFPH5OU34shQ_Aaai2Fhz";
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -149,14 +163,9 @@ function makeCard(r){
  const card=document.createElement("article");card.className="veg";
  const img=document.createElement("img");img.alt=FRENCH_NAMES[v]||v;img.loading="lazy";img.crossOrigin="anonymous";
  const setImage=url=>{if(!url||!img.isConnected)return;img.dataset.imageUrl=url;img.src=url};
- const showEmoji=()=>{if(!img.isConnected)return;img.replaceWith(Object.assign(document.createElement("span"),{className:"emoji",textContent:EMOJI[v]||"🥬"}))};
- img.onerror=()=>{
-  if(img.dataset.fallbackTried!=="yes"&&FRUIT360[v]){img.dataset.fallbackTried="yes";setImage(FRUIT360[v]);return}
-  if(img.dataset.commonsTried!=="yes"){img.dataset.commonsTried="yes";getCommonsImage(v).then(url=>{if(url)setImage(url);else showEmoji()}).catch(showEmoji);return}
-  showEmoji();
- };
+ img.onerror=()=>{if(img.isConnected)img.replaceWith(Object.assign(document.createElement("span"),{className:"emoji",textContent:EMOJI[v]||"🥬"}))};
  card.append(img);
- getWikiImage(v).then(url=>{if(img.isConnected){if(url)setImage(url);else if(FRUIT360[v])setImage(FRUIT360[v]);else{img.dataset.imageResolved="yes";getCommonsImage(v).then(next=>next?setImage(next):showEmoji()).catch(showEmoji)}}}).catch(()=>{if(FRUIT360[v])setImage(FRUIT360[v]);else{img.dataset.imageResolved="yes";getCommonsImage(v).then(next=>next?setImage(next):showEmoji()).catch(showEmoji)}});
+ setImage(FRUIT360[v]);
  const name=document.createElement("div");name.className="name";name.innerHTML=esc(FRENCH_NAMES[v]||v)+'<em>'+esc(v)+'</em>';card.append(name);
  const s=document.createElement("div");s.className="score";s.innerHTML='<strong>'+score.toFixed(2)+'/6</strong> · '+votes+' vote'+(votes>1?'s':'');card.append(s);
  return card;
