@@ -27,5 +27,73 @@ function iconUrl(v){if(v==='Artichoke')return dataSvg(artichokeIcon);if(v==='Wat
 const tierFor=n=>n>=5.5?'S':n>=4.5?'A':n>=3.5?'B':n>=2.5?'C':n>=1.5?'D':'F';const $=id=>document.getElementById(id);const SUPABASE_URL='https://dpnzgpmlbdrlwackyafa.supabase.co';const SUPABASE_KEY='sb_publishable_838VhmZlihiFPH5OU34shQ_Aaai2Fhz';
 function makeCard(r){const v=r.vegetable,card=document.createElement('article');card.className='veg';const icon=document.createElement('span');icon.className='veg-icon';icon.setAttribute('aria-hidden','true');const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=iconUrl(v);img.onerror=()=>{img.onerror=null;img.replaceWith(document.createTextNode('🌱'))};icon.append(img);card.append(icon);const name=document.createElement('div');name.className='name';name.textContent=NAMES[v]||v;const en=document.createElement('em');en.textContent=v;name.append(en);card.append(name);const score=document.createElement('div');score.className='score';score.innerHTML='<strong>'+Number(r.average_score).toFixed(2)+'/6</strong> · '+Number(r.votes||0)+' votes';card.append(score);return card}
 async function load(){const button=$('refresh');button.disabled=true;const root=$('tiers');root.replaceChildren();try{const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data,error}=await client.rpc('vegetable_leaderboard');if(error)throw error;const rows=(data||[]).map(r=>({...r,average_score:Number(r.average_score)})).filter(r=>VEGETABLES.includes(r.vegetable)&&Number.isFinite(r.average_score)&&r.average_score>=1&&r.average_score<=6);if(!rows.length){root.innerHTML='<div class="empty">Pas encore de votes. (No votes yet.)</div>';$('summary').textContent='0 légumes classés';return}for(const t of ['S','A','B','C','D','F']){const section=document.createElement('section');section.className='tier';section.dataset.tier=t;const label=document.createElement('div');label.className='tier-label';label.textContent=t;section.append(label);const zone=document.createElement('div');zone.className='zone';rows.filter(r=>tierFor(r.average_score)===t).sort((a,b)=>b.average_score-a.average_score||a.vegetable.localeCompare(b.vegetable)).forEach(r=>zone.append(makeCard(r)));if(!zone.children.length){const empty=document.createElement('span');empty.className='score';empty.textContent='—';zone.append(empty)}section.append(zone);root.append(section)}$('summary').textContent=rows.length+' légumes classés · '+rows.reduce((n,r)=>n+Number(r.votes||0),0)+' évaluations cumulées'}catch(error){root.innerHTML='<div class="empty">Impossible de charger les résultats. Réessayez. (Could not load results.)</div>';$('summary').textContent='Résultats indisponibles';console.error(error)}finally{button.disabled=false}}
-$('refresh').addEventListener('click',load);$('export').addEventListener('click',async()=>{if(!window.html2canvas){alert('Export library unavailable.');return}const button=$('export'),controls=$('.meta-actions');button.disabled=true;controls.classList.add('export-hidden');let blobUrl=null;try{await Promise.all([...$('capture').querySelectorAll('img')].map(img=>img.decode?img.decode().catch(()=>{}):Promise.resolve()));const canvas=await html2canvas($('capture'),{backgroundColor:'#f5f1e8',scale:2,useCORS:true,ignoreElements:el=>el.classList?.contains('export-hidden')});const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('PNG encoding failed')),'image/png'));controls.classList.remove('export-hidden');button.disabled=false;blobUrl=URL.createObjectURL(blob);const link=document.createElement('a');link.href=blobUrl;link.download='LAF-vegetable-mean-tier-list.png';link.style.display='none';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(blobUrl),60000);blobUrl=null}catch(error){console.error(error);alert('Export failed; please try again.')}finally{controls.classList.remove('export-hidden');button.disabled=false;if(blobUrl)URL.revokeObjectURL(blobUrl)}});load();function reportHeight(){if(window.parent!==window)window.parent.postMessage({type:'laf-summary-height',height:document.documentElement.scrollHeight},'*')}if(window.parent!==window){new ResizeObserver(reportHeight).observe(document.body);window.addEventListener('load',reportHeight);setTimeout(reportHeight,250);setTimeout(reportHeight,1000)}
+$('refresh').addEventListener('click',load);
+async function getHtml2Canvas(){
+  if(typeof window.html2canvas==='function') return window.html2canvas;
+  const sources=[
+    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+    'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js'
+  ];
+  for(const src of sources){
+    try{
+      await new Promise((resolve,reject)=>{
+        const script=document.createElement('script');
+        script.src=src;script.async=true;
+        script.onload=resolve;script.onerror=()=>reject(new Error('Could not load '+src));
+        document.head.append(script);
+      });
+      if(typeof window.html2canvas==='function') return window.html2canvas;
+    }catch(error){console.warn(error)}
+  }
+  throw new Error('PNG renderer could not be loaded');
+}
+$('export').addEventListener('click',async()=>{
+  const button=$('export'),controls=$('.meta-actions'),summary=$('summary');
+  if(button.disabled)return;
+  button.disabled=true;
+  const originalLabel=button.textContent;
+  button.textContent='Préparation du PNG…';
+  summary.textContent='Préparation de l’image… (Preparing image…)';
+  let blobUrl=null;
+  try{
+    const render=await getHtml2Canvas();
+    await Promise.all([...$('capture').querySelectorAll('img')].map(img=>img.decode?img.decode().catch(()=>{}):Promise.resolve()));
+    controls.classList.add('export-hidden');
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    const canvas=await render($('capture'),{
+      backgroundColor:'#f5f1e8',scale:2,useCORS:true,allowTaint:false,
+      ignoreElements:el=>el.classList?.contains('export-hidden')
+    });
+    const blob=await new Promise((resolve,reject)=>{
+      if(!canvas.toBlob){reject(new Error('PNG encoding is not supported by this browser'));return}
+      canvas.toBlob(result=>result?resolve(result):reject(new Error('PNG encoding failed')),'image/png');
+    });
+    if(blob.type!=='image/png'||blob.size<1000)throw new Error('The generated PNG is empty or invalid');
+    blobUrl=URL.createObjectURL(blob);
+    controls.classList.remove('export-hidden');
+    button.textContent=originalLabel;
+    button.disabled=false;
+    const link=document.createElement('a');
+    link.href=blobUrl;
+    link.download='LAF-vegetable-mean-tier-list.png';
+    link.textContent='Télécharger le PNG · Download PNG';
+    link.style.cssText='display:inline-block;padding:10px 15px;border-radius:999px;background:#7041a6;color:white;font-weight:750;text-decoration:none';
+    link.addEventListener('click',()=>{setTimeout(()=>{if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null}},60000)},{once:true});
+    const oldLink=$('png-download');if(oldLink)oldLink.remove();
+    link.id='png-download';
+    controls.append(link);
+    link.click();
+    summary.textContent='PNG prêt. Si le téléchargement ne démarre pas, touchez « Télécharger le PNG ».';
+    setTimeout(()=>{if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null}},60000);
+  }catch(error){
+    console.error('PNG export failed:',error);
+    summary.textContent='Échec de l’export PNG : '+(error?.message||'erreur inconnue');
+    alert('Export PNG impossible. '+(error?.message||'Vérifiez votre connexion puis réessayez.'));
+  }finally{
+    controls.classList.remove('export-hidden');
+    button.textContent=originalLabel;
+    button.disabled=false;
+    if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null}
+  }
+});load();function reportHeight(){if(window.parent!==window)window.parent.postMessage({type:'laf-summary-height',height:document.documentElement.scrollHeight},'*')}if(window.parent!==window){new ResizeObserver(reportHeight).observe(document.body);window.addEventListener('load',reportHeight);setTimeout(reportHeight,250);setTimeout(reportHeight,1000)}
 </script></body></html>
