@@ -12,11 +12,7 @@ header{padding:30px 0 24px;border-bottom:1px solid #d8d3c7}h1{font-size:clamp(2.
 .progress{height:8px;background:#e1ddd2;border-radius:9px;overflow:hidden;margin:22px 0 8px}.bar{height:100%;width:0;background:#58704c;transition:width .2s}
 .meta{display:flex;justify-content:space-between;color:#6c7168;font-size:.85rem}
 h2{font-size:1.3rem;letter-spacing:-.03em;margin:28px 0 12px}
-.tiers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.tier{background:#fffdf8;border:1px solid #e2ded3;border-radius:14px;padding:13px;min-height:95px}
-.tier label{display:flex;align-items:center;gap:9px;font-weight:800;font-size:.9rem;margin-bottom:9px}.veg-photo{display:flex;gap:10px;align-items:center;margin:2px 0 10px;min-height:76px}.veg-photo img{width:76px;height:76px;object-fit:contain;border-radius:10px;background:#fff;flex:none;padding:2px}.photo-credit{font-size:.68rem;line-height:1.35;color:#777d72}.photo-credit a{color:#536b48;text-decoration:underline}.photo-placeholder{width:76px;height:76px;border-radius:10px;background:#e9e5da;display:grid;place-items:center;color:#71806b;font-size:1.6rem;flex:none}
-.tier b{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#e9eddf;color:#40543a}
-select{width:100%;border:1px solid #d9d5ca;border-radius:9px;padding:11px;background:#fffdf8;color:#20251f;font:inherit}
+.tiers{display:grid;gap:7px}.tier{display:flex;align-items:stretch;background:#fffdf8;border:1px solid #e2ded3;border-radius:12px;min-height:92px;overflow:hidden}.tier-label{display:grid;place-items:center;flex:0 0 58px;font-size:1.55rem;font-weight:950;color:#222}.tier[data-tier="S"] .tier-label{background:#ff7f7f}.tier[data-tier="A"] .tier-label{background:#ffbf7f}.tier[data-tier="B"] .tier-label{background:#ffdf7f}.tier[data-tier="C"] .tier-label{background:#ffff7f}.tier[data-tier="D"] .tier-label{background:#bfff7f}.tier[data-tier="F"] .tier-label{background:#7fbfff}.tile-zone{display:flex;align-content:flex-start;align-items:flex-start;gap:7px;flex:1;flex-wrap:wrap;padding:8px;min-height:90px}.veg-tile{width:78px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px;border:1px solid #e8e3d9;border-radius:9px;background:#fff;cursor:grab;user-select:none;font-size:.68rem;font-weight:700;text-align:center;line-height:1.15}.veg-tile img{width:48px;height:48px;object-fit:contain}.veg-tile .emoji{font-size:35px;line-height:48px}.veg-tile.selected{outline:3px solid #58704c;outline-offset:1px}.tier.drag-over{outline:3px dashed #58704c;outline-offset:-3px}.pool{margin-top:25px;background:#eae6dc;border:1px solid #d8d3c7;border-radius:14px;padding:14px}.pool h2{margin:0 0 5px}.pool p{font-size:.82rem;color:#62685d;margin:0 0 12px}.pool .tile-zone{min-height:100px;padding:4px}.result-button{margin-top:14px;background:#e6e1d5;color:#30372e}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
 button{border:0;border-radius:999px;padding:13px 20px;font:inherit;font-weight:750;cursor:pointer}
 .primary{background:#273c2a;color:white}.secondary{background:#e6e1d5;color:#30372e}
@@ -33,11 +29,11 @@ footer{margin-top:40px;color:#85897f;font-size:.8rem}
 <body><main class="wrap">
 <header><div class="kicker">LAF · Laboratoire Albert Fert</div><h1>Rank the<br>LAF vegetables.</h1><p class="sub">The LAF (Laboratoire Albert Fert) vegetable tier list. Forty vegetables. Six tiers. No fence-sitting. Give every vegetable a rank and help build the definitive LAF community tier list.</p></header>
 <section aria-label="Your rankings"><div class="progress"><div class="bar" id="bar"></div></div><div class="meta"><span id="count">0 of 40 ranked</span><span>All vegetables required</span></div>
-<h2>Your verdict</h2><div class="tiers" id="items"></div>
+<h2>Build your tier list</h2><p class="note">Drag vegetables into a tier. On a phone, tap a vegetable, then tap its tier. Leave anything you don’t want to rate in the tray below.</p><div class="tiers" id="items"></div><div class="pool"><h2>Not ranked yet</h2><p>Leave vegetables here if you can’t be bothered to rank them.</p><div class="tile-zone" id="unranked"></div></div>
 <div class="actions"><button class="primary" id="submit" disabled>Submit my ranking</button><button class="secondary" id="reset" type="button">Reset</button></div>
-<p class="note">Submissions are anonymous. Please submit once. Your rankings contribute to the public aggregate leaderboard.</p><div id="status" role="status"></div></section>
-<section class="leaderboard"><div class="kicker">The people's verdict</div><h2>Community leaderboard</h2><p class="note">Average tier score across submitted rankings (S = 6, F = 1).</p><div id="board" class="note">Leaderboard will appear once the database is connected.</div></section>
-<footer>LAF Vegetable Tier List · Laboratoire Albert Fert · Anonymous community survey</footer>
+<p class="note">Submissions are anonymous. Rank as few or as many as you like. Only ranked vegetables count towards their mean score.</p><div id="status" role="status"></div></section>
+<section class="leaderboard" id="mean-results"><div class="kicker">The people's verdict</div><h2>Community mean results</h2><p class="note">Mean score for each vegetable, using only submissions that ranked it (S = 6, F = 1).</p><div id="board" class="note">Leaderboard will appear once the database is connected.</div></section>
+<button class="result-button" id="see-results" type="button">See public mean results ↓</button><footer>LAF Vegetable Tier List · Laboratoire Albert Fert · Anonymous community survey</footer>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -45,50 +41,19 @@ const VEGETABLES = ["Artichoke","Asparagus","Aubergine","Beetroot","Bell pepper"
 const TIERS = ["S","A","B","C","D","F"];
 const SUPABASE_URL = "https://dpnzgpmlbdrlwackyafa.supabase.co"; // Set after creating the Supabase project.
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_838VhmZlihiFPH5OU34shQ_Aaai2Fhz"; // Public publishable key only; never put a secret/service_role key here.
+
 const $ = (id)=>document.getElementById(id);
-const picks = {};
-const esc = s => s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-$("items").innerHTML = VEGETABLES.map(v=>'<div class="tier"><label><b>'+esc(v[0])+'</b>'+esc(v)+'</label><div class="veg-photo" data-veg="'+esc(v)+'"><div class="photo-placeholder" aria-hidden="true">🥬</div><span class="photo-credit">Vegetable illustration</span></div><select aria-label="Rank '+esc(v)+'" data-veg="'+esc(v)+'"><option value="">Choose a tier…</option>'+TIERS.map(t=>'<option>'+t+'</option>').join("")+'</select></div>').join("");
-// Curated isolated vegetable images from the Fruits-360 dataset.
-// Items without a matching dataset image use a vegetable emoji, never a
-// guessed photograph. Dataset attribution and licence are linked per image.
-const FRUIT360 = {
- "Beetroot":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Beetroot%201/0_100.jpg",
- "Cabbage":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cabbage%20white%201/r0_0_100.jpg",
- "Carrot":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Carrot%201/r0_0_100.jpg",
- "Cauliflower":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cauliflower%201/0_100.jpg",
- "Celery":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Celery%201/r0_0_100.jpg",
- "Corn":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Corn%201/0_100.jpg",
- "Cucumber":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cucumber%201/r0_0_100.jpg",
- "Aubergine":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Eggplant%201/0_100.jpg",
- "Kohlrabi":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Kohlrabi%201/0_100.jpg",
- "Mushroom":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Mushroom%20champignon%201/r0_0_100.jpg",
- "Onion":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Onion%20Red%201/100_100.jpg",
- "Bell pepper":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Pepper%20Red%201/100_100.jpg",
- "Potato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Potato%20White%201/113_100.jpg",
- "Sweet potato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Potato%20Sweet%201/0_100.jpg",
- "Tomato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Tomato%201/0_100.jpg",
- "Zucchini":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Zucchini%201/r0_0_100.jpg",
- "Garlic":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/garlic%20bulb%201/r0_0_100.jpg"
-};
-const VEG_EMOJI = {
- "Artichoke":"🌿","Asparagus":"🌱","Aubergine":"🍆","Beetroot":"🫜","Bell pepper":"🫑","Broccoli":"🥦","Brussels sprouts":"🥬","Cabbage":"🥬","Carrot":"🥕","Cauliflower":"🥦","Celery":"🥬","Chard":"🥬","Chicory":"🌿","Corn":"🌽","Cucumber":"🥒","Fennel":"🌿","Garlic":"🧄","Green beans":"🫛","Kale":"🥬","Leek":"🥬","Lettuce":"🥬","Mushroom":"🍄","Okra":"🌿","Onion":"🧅","Parsnip":"🥕","Peas":"🫛","Potato":"🥔","Pumpkin":"🎃","Radish":"🌶️","Spinach":"🥬","Sweet potato":"🍠","Tomato":"🍅","Turnip":"🫜","Zucchini":"🥒","Bok choy":"🥬","Butternut squash":"🎃","Celeriac":"🥔","Kohlrabi":"🥬","Shallot":"🧅","Watercress":"🌿"
-};
-document.querySelectorAll("[data-veg]").forEach(el=>{
- const veg=el.dataset.veg, src=FRUIT360[veg];
- if(src){
-  const img=document.createElement("img");img.loading="lazy";img.alt=veg;img.src=src;
-  img.onerror=()=>{el.innerHTML='<div class="photo-placeholder" aria-hidden="true">'+(VEG_EMOJI[veg]||"🥬")+'</div><span class="photo-credit">Illustration</span>'};
-  const credit=document.createElement("span");credit.className="photo-credit";
-  const link=document.createElement("a");link.href="https://github.com/fruits-360/fruits-360-100x100";link.target="_blank";link.rel="noopener noreferrer";link.textContent="Fruits-360 · CC BY-SA 4.0";
-  credit.append(link);el.replaceChildren(img,credit);
- }else{
-  el.innerHTML='<div class="photo-placeholder" aria-hidden="true">'+(VEG_EMOJI[veg]||"🥬")+'</div><span class="photo-credit">Illustration</span>';
- }
-});
-function update(){const n=Object.keys(picks).length;$("count").textContent=n+" of "+VEGETABLES.length+" ranked";$("bar").style.width=(n/VEGETABLES.length*100)+"%";$("submit").disabled=n!==VEGETABLES.length}
-$("items").addEventListener("change",e=>{if(e.target.matches("select")){if(e.target.value)picks[e.target.dataset.veg]=e.target.value;else delete picks[e.target.dataset.veg];update()}});
-$("reset").onclick=()=>{for(const k of Object.keys(picks))delete picks[k];document.querySelectorAll("select").forEach(s=>s.value="");$("status").className="";$("status").style.display="none";update()};
+const picks={};let selectedVeg=null;
+const FRUIT360={"Beetroot":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Beetroot%201/0_100.jpg","Cabbage":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cabbage%20white%201/r0_0_100.jpg","Carrot":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Carrot%201/r0_0_100.jpg","Cauliflower":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cauliflower%201/0_100.jpg","Celery":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Celery%201/r0_0_100.jpg","Corn":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Corn%201/0_100.jpg","Cucumber":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cucumber%201/r0_0_100.jpg","Aubergine":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Eggplant%201/0_100.jpg","Kohlrabi":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Kohlrabi%201/0_100.jpg","Mushroom":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Mushroom%20champignon%201/r0_0_100.jpg","Onion":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Onion%20Red%201/100_100.jpg","Bell pepper":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Pepper%20Red%201/100_100.jpg","Potato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Potato%20White%201/113_100.jpg","Sweet potato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Potato%20Sweet%201/0_100.jpg","Tomato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Tomato%201/0_100.jpg","Zucchini":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Zucchini%201/r0_0_100.jpg","Garlic":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/garlic%20bulb%201/r0_0_100.jpg"};
+const EMOJI={"Artichoke":"🌿","Asparagus":"🌱","Aubergine":"🍆","Beetroot":"🫜","Bell pepper":"🫑","Broccoli":"🥦","Brussels sprouts":"🥬","Cabbage":"🥬","Carrot":"🥕","Cauliflower":"🥦","Celery":"🥬","Chard":"🥬","Chicory":"🌿","Corn":"🌽","Cucumber":"🥒","Fennel":"🌿","Garlic":"🧄","Green beans":"🫛","Kale":"🥬","Leek":"🥬","Lettuce":"🥬","Mushroom":"🍄","Okra":"🌿","Onion":"🧅","Parsnip":"🥕","Peas":"🫛","Potato":"🥔","Pumpkin":"🎃","Radish":"🌶️","Spinach":"🥬","Sweet potato":"🍠","Tomato":"🍅","Turnip":"🫜","Zucchini":"🥒","Bok choy":"🥬","Butternut squash":"🎃","Celeriac":"🥔","Kohlrabi":"🥬","Shallot":"🧅","Watercress":"🌿"};
+$("items").innerHTML=TIERS.map(t=>'<div class="tier" data-tier="'+t+'"><div class="tier-label">'+t+'</div><div class="tile-zone" data-drop="'+t+'"></div></div>').join("");
+function makeTile(v){const el=document.createElement("div");el.className="veg-tile";el.draggable=true;el.tabIndex=0;el.setAttribute("role","button");el.dataset.veg=v;const src=FRUIT360[v];if(src){const im=document.createElement("img");im.src=src;im.alt="";im.loading="lazy";im.onerror=()=>{const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";im.replaceWith(em)};el.append(im)}else{const em=document.createElement("span");em.className="emoji";em.textContent=EMOJI[v]||"🥬";el.append(em)}const label=document.createElement("span");label.textContent=v;el.append(label);return el}
+function render(){document.querySelectorAll(".tile-zone").forEach(z=>z.replaceChildren());VEGETABLES.forEach(v=>{const z=picks[v]?document.querySelector('[data-drop="'+picks[v]+'"]'):$("unranked");z.append(makeTile(v))});document.querySelectorAll(".veg-tile").forEach(el=>{el.classList.toggle("selected",el.dataset.veg===selectedVeg);el.onclick=()=>{selectedVeg=el.dataset.veg;document.querySelectorAll(".veg-tile").forEach(t=>t.classList.toggle("selected",t.dataset.veg===selectedVeg))};el.ondragstart=e=>{selectedVeg=el.dataset.veg;e.dataTransfer.setData("text/plain",selectedVeg)};el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectedVeg=el.dataset.veg;document.querySelectorAll(".veg-tile").forEach(t=>t.classList.toggle("selected",t.dataset.veg===selectedVeg))}}});update()}
+function assign(v,t){if(!v)return;if(t)picks[v]=t;else delete picks[v];selectedVeg=null;render()}
+document.querySelectorAll(".tier").forEach(row=>{row.ondragover=e=>{e.preventDefault();row.classList.add("drag-over")};row.ondragleave=()=>row.classList.remove("drag-over");row.ondrop=e=>{e.preventDefault();row.classList.remove("drag-over");assign(e.dataTransfer.getData("text/plain"),row.dataset.tier)};row.onclick=e=>{if(selectedVeg&&!e.target.closest(".veg-tile"))assign(selectedVeg,row.dataset.tier)}});
+$("unranked").ondragover=e=>e.preventDefault();$("unranked").ondrop=e=>{e.preventDefault();assign(e.dataTransfer.getData("text/plain"),null)};$("unranked").onclick=e=>{if(selectedVeg&&!e.target.closest(".veg-tile"))assign(selectedVeg,null)};
+function update(){const n=Object.keys(picks).length;$("count").textContent=n+" of "+VEGETABLES.length+" ranked";$("bar").style.width=(n/VEGETABLES.length*100)+"%";$("submit").disabled=n===0}
+render();
 function status(msg,kind){$("status").textContent=msg;$("status").className=kind}
 async function loadBoard(){if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){$("board").textContent="Database setup is pending.";return}
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
@@ -97,13 +62,13 @@ async function loadBoard(){if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISH
  if(!data?.length){$("board").textContent="No rankings yet — be the first!";return}
  $("board").innerHTML='<table><thead><tr><th>Rank</th><th>Vegetable</th><th>Average tier</th><th>Votes</th></tr></thead><tbody>'+data.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.vegetable)+'</td><td>'+Number(r.average_score).toFixed(2)+'</td><td>'+r.votes+'</td></tr>').join("")+'</tbody></table>';
 }
-$("submit").onclick=async()=>{if(Object.keys(picks).length!==VEGETABLES.length)return;
+$("submit").onclick=async()=>{if(Object.keys(picks).length===0)return;
  if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){status("The page is ready, but the database has not been connected yet. Your ranking has not been submitted.","err");return}
  $("submit").disabled=true;status("Submitting…","");
  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
  const {error}=await client.from("vegetable_submissions").insert({rankings:picks});
  if(error){status("Could not submit: "+error.message,"err");$("submit").disabled=false;return}
- status("Thanks! Your anonymous ranking has been recorded.","ok");$("items").querySelectorAll("select").forEach(s=>s.disabled=true);$("reset").disabled=true;await loadBoard();
+ status("Thanks! Your anonymous ranking has been recorded ("+Object.keys(picks).length+" vegetables ranked).","ok");$("submit").disabled=true;$("reset").disabled=true;await loadBoard();
 };
-loadBoard();update();
+$("see-results").onclick=()=>{$("mean-results").scrollIntoView({behavior:"smooth"});loadBoard()};loadBoard();update();
 </script></body></html>
