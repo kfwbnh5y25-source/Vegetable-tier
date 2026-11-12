@@ -3,13 +3,7 @@ create table if not exists public.vegetable_submissions (
   created_at timestamptz not null default now(),
   rankings jsonb not null,
   constraint rankings_is_object check (jsonb_typeof(rankings) = 'object'),
-  constraint rankings_has_40_items check (jsonb_object_length(rankings) = 40),
-  constraint rankings_valid_tiers check (
-    not exists (
-      select 1 from jsonb_each_text(rankings) e
-      where e.value not in ('S','A','B','C','D','F')
-    )
-  )
+  constraint rankings_has_40_items check (jsonb_object_length(rankings) = 40)
 );
 
 alter table public.vegetable_submissions enable row level security;
