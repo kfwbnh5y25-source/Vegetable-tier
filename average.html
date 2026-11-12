@@ -163,7 +163,7 @@ function makeCard(r){
  const card=document.createElement("article");card.className="veg";
  const img=document.createElement("img");img.alt=FRENCH_NAMES[v]||v;img.loading="lazy";img.crossOrigin="anonymous";
  const setImage=url=>{if(!url||!img.isConnected)return;img.dataset.imageUrl=url;img.src=url};
- img.onerror=()=>{if(img.isConnected)img.replaceWith(Object.assign(document.createElement("span"),{className:"emoji",textContent:EMOJI[v]||"🥬"}))};
+ img.onerror=()=>{if(!img.isConnected)return;const fallback=EMOJI[v];if(fallback){img.replaceWith(Object.assign(document.createElement("span"),{className:"emoji",textContent:fallback}))}else{img.remove()}};
  card.append(img);
  setImage(FRUIT360[v]);
  const name=document.createElement("div");name.className="name";name.innerHTML=esc(FRENCH_NAMES[v]||v)+'<em>'+esc(v)+'</em>';card.append(name);
@@ -247,7 +247,7 @@ async function buildExportSvg(){
    const name=n?.childNodes[0]?.textContent?.trim()||"";
    const en=n?.querySelector("em")?.textContent||"";
    const score=sc?.textContent?.trim()||"";
-   const emoji=card.querySelector(".emoji")?.textContent||EMOJI[en]||"🥬";
+   const emoji=card.querySelector(".emoji")?.textContent||EMOJI[en]||"";
    parts.push('<rect x="'+x+'" y="'+cy+'" width="'+cardW+'" height="'+cardH+'" rx="9" fill="#fff" stroke="#e8e3d9"/>');
    if(imageData[en])parts.push('<image href="'+imageData[en]+'" x="'+(x+7)+'" y="'+(cy+9)+'" width="34" height="34" preserveAspectRatio="xMidYMid meet"/>');
    else parts.push('<text x="'+(x+9)+'" y="'+(cy+31)+'" font-family="Arial,sans-serif" font-size="19">'+xml(emoji)+'</text>');
