@@ -10,6 +10,8 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: true
+# Each deployment must run as a fresh workflow run; rerunning only the deploy job
+# can leave duplicate github-pages artifacts attached to the same run.
 jobs:
   deploy:
     environment:
