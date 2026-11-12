@@ -61,7 +61,7 @@ async function loadBoard(){if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISH
  const {data,error}=await client.rpc("vegetable_leaderboard");
  if(error){$("board").textContent="Leaderboard temporarily unavailable.";return}
  if(!data?.length){$("board").textContent="No rankings yet — be the first!";return}
- $("board").innerHTML='<table><thead><tr><th>Rank</th><th>Vegetable</th><th>Average tier</th><th>Votes</th></tr></thead><tbody>'+data.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.vegetable)+'</td><td>'+Number(r.average_score).toFixed(2)+'</td><td>'+r.votes+'</td></tr>').join("")+'</tbody></table>';
+ $("board").innerHTML='<table><thead><tr><th>Rank</th><th>Vegetable</th><th>Mean score</th><th>Rankings</th></tr></thead><tbody>'+data.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.vegetable)+'</td><td>'+Number(r.average_score).toFixed(2)+'</td><td>'+r.votes+'</td></tr>').join("")+'</tbody></table>';
 }
 $("submit").onclick=async()=>{if(Object.keys(picks).length===0)return;
  if(!window.supabase||!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){status("The page is ready, but the database has not been connected yet. Your ranking has not been submitted.","err");return}
