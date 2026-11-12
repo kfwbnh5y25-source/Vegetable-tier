@@ -14,7 +14,7 @@ header{padding:30px 0 24px;border-bottom:1px solid #d8d3c7}h1{font-size:clamp(2.
 h2{font-size:1.3rem;letter-spacing:-.03em;margin:28px 0 12px}
 .tiers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .tier{background:#fffdf8;border:1px solid #e2ded3;border-radius:14px;padding:13px;min-height:95px}
-.tier label{display:flex;align-items:center;gap:9px;font-weight:800;font-size:.9rem;margin-bottom:9px}.veg-photo{display:flex;gap:10px;align-items:center;margin:2px 0 10px;min-height:76px}.veg-photo img{width:76px;height:76px;object-fit:cover;border-radius:10px;background:#e9e5da;flex:none}.photo-credit{font-size:.68rem;line-height:1.35;color:#777d72}.photo-credit a{color:#536b48;text-decoration:underline}.photo-placeholder{width:76px;height:76px;border-radius:10px;background:#e9e5da;display:grid;place-items:center;color:#71806b;font-size:1.6rem;flex:none}
+.tier label{display:flex;align-items:center;gap:9px;font-weight:800;font-size:.9rem;margin-bottom:9px}.veg-photo{display:flex;gap:10px;align-items:center;margin:2px 0 10px;min-height:76px}.veg-photo img{width:76px;height:76px;object-fit:contain;border-radius:10px;background:#fff;flex:none;padding:2px}.photo-credit{font-size:.68rem;line-height:1.35;color:#777d72}.photo-credit a{color:#536b48;text-decoration:underline}.photo-placeholder{width:76px;height:76px;border-radius:10px;background:#e9e5da;display:grid;place-items:center;color:#71806b;font-size:1.6rem;flex:none}
 .tier b{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#e9eddf;color:#40543a}
 select{width:100%;border:1px solid #d9d5ca;border-radius:9px;padding:11px;background:#fffdf8;color:#20251f;font:inherit}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
@@ -48,33 +48,44 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_838VhmZlihiFPH5OU34shQ_Aaai2Fhz
 const $ = (id)=>document.getElementById(id);
 const picks = {};
 const esc = s => s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-$("items").innerHTML = VEGETABLES.map(v=>'<div class="tier"><label><b>'+esc(v[0])+'</b>'+esc(v)+'</label><div class="veg-photo" data-photo="'+esc(v)+'"><div class="photo-placeholder" aria-hidden="true">🥬</div><span class="photo-credit">Finding a freely licensed photo…</span></div><select aria-label="Rank '+esc(v)+'" data-veg="'+esc(v)+'"><option value="">Choose a tier…</option>'+TIERS.map(t=>'<option>'+t+'</option>').join("")+'</select></div>').join("");
-// Photos are discovered from Wikimedia Commons and displayed only when their
-// file metadata declares a public-domain, CC0, CC BY or CC BY-SA licence.
-const photoObserver=new IntersectionObserver(entries=>{
- entries.forEach(entry=>{if(entry.isIntersecting){photoObserver.unobserve(entry.target);loadCommonsPhoto(entry.target)}});
-},{rootMargin:"220px"});
-document.querySelectorAll("[data-photo]").forEach(el=>photoObserver.observe(el));
-function plainMeta(value){const d=document.createElement("div");d.innerHTML=value||"";return d.textContent.trim()}
-async function loadCommonsPhoto(el){
- const veg=el.dataset.photo;
- try{
-  const q=new URLSearchParams({action:"query",format:"json",origin:"*",generator:"search",gsrsearch:"filetype:bitmap "+veg,gsrnamespace:"6",gsrlimit:"1",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"240"});
-  const res=await fetch("https://commons.wikimedia.org/w/api.php?"+q);
-  if(!res.ok)throw new Error("Commons request failed");
-  const json=await res.json(), page=Object.values(json.query?.pages||{})[0], info=page?.imageinfo?.[0], meta=info?.extmetadata||{};
-  const license=plainMeta(meta.LicenseShortName?.value);
-  if(!info?.thumburl||!(/^(CC0|Public domain|CC BY(?:-SA)?(?:\s|$))/i.test(license))||/NC|ND/i.test(license))throw new Error("No suitable free image found");
-  const img=document.createElement("img");img.loading="lazy";img.alt=veg;img.src=info.thumburl;
+$("items").innerHTML = VEGETABLES.map(v=>'<div class="tier"><label><b>'+esc(v[0])+'</b>'+esc(v)+'</label><div class="veg-photo" data-veg="'+esc(v)+'"><div class="photo-placeholder" aria-hidden="true">🥬</div><span class="photo-credit">Vegetable illustration</span></div><select aria-label="Rank '+esc(v)+'" data-veg="'+esc(v)+'"><option value="">Choose a tier…</option>'+TIERS.map(t=>'<option>'+t+'</option>').join("")+'</select></div>').join("");
+// Curated isolated vegetable images from the Fruits-360 dataset.
+// Items without a matching dataset image use a vegetable emoji, never a
+// guessed photograph. Dataset attribution and licence are linked per image.
+const FRUIT360 = {
+ "Beetroot":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Beetroot%201/0_100.jpg",
+ "Cabbage":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cabbage%20white%201/r0_0_100.jpg",
+ "Carrot":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Carrot%201/r0_0_100.jpg",
+ "Cauliflower":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cauliflower%201/0_100.jpg",
+ "Celery":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Celery%201/r0_0_100.jpg",
+ "Corn":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Corn%201/0_100.jpg",
+ "Cucumber":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Cucumber%201/r0_0_100.jpg",
+ "Aubergine":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Eggplant%201/0_100.jpg",
+ "Kohlrabi":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Kohlrabi%201/0_100.jpg",
+ "Mushroom":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Mushroom%20champignon%201/r0_0_100.jpg",
+ "Onion":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Onion%20Red%201/100_100.jpg",
+ "Bell pepper":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Pepper%20Red%201/100_100.jpg",
+ "Potato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Potato%20White%201/113_100.jpg",
+ "Sweet potato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Potato%20Sweet%201/0_100.jpg",
+ "Tomato":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Tomato%201/0_100.jpg",
+ "Zucchini":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/Zucchini%201/r0_0_100.jpg",
+ "Garlic":"https://raw.githubusercontent.com/fruits-360/fruits-360-100x100/main/Training/garlic%20bulb%201/r0_0_100.jpg"
+};
+const VEG_EMOJI = {
+ "Artichoke":"🌿","Asparagus":"🌱","Aubergine":"🍆","Beetroot":"🫜","Bell pepper":"🫑","Broccoli":"🥦","Brussels sprouts":"🥬","Cabbage":"🥬","Carrot":"🥕","Cauliflower":"🥦","Celery":"🥬","Chard":"🥬","Chicory":"🌿","Corn":"🌽","Cucumber":"🥒","Fennel":"🌿","Garlic":"🧄","Green beans":"🫛","Kale":"🥬","Leek":"🥬","Lettuce":"🥬","Mushroom":"🍄","Okra":"🌿","Onion":"🧅","Parsnip":"🥕","Peas":"🫛","Potato":"🥔","Pumpkin":"🎃","Radish":"🌶️","Spinach":"🥬","Sweet potato":"🍠","Tomato":"🍅","Turnip":"🫜","Zucchini":"🥒","Bok choy":"🥬","Butternut squash":"🎃","Celeriac":"🥔","Kohlrabi":"🥬","Shallot":"🧅","Watercress":"🌿"
+};
+document.querySelectorAll("[data-veg]").forEach(el=>{
+ const veg=el.dataset.veg, src=FRUIT360[veg];
+ if(src){
+  const img=document.createElement("img");img.loading="lazy";img.alt=veg;img.src=src;
+  img.onerror=()=>{el.innerHTML='<div class="photo-placeholder" aria-hidden="true">'+(VEG_EMOJI[veg]||"🥬")+'</div><span class="photo-credit">Illustration</span>'};
   const credit=document.createElement("span");credit.className="photo-credit";
-  const author=plainMeta(meta.Artist?.value)||"Wikimedia Commons contributor";
-  const source=document.createElement("a");source.href=info.descriptionurl;source.target="_blank";source.rel="noopener noreferrer";source.textContent=author;
-  const lic=document.createElement("a");lic.href=meta.LicenseUrl?.value||info.descriptionurl;lic.target="_blank";lic.rel="noopener noreferrer";lic.textContent=license;
-  credit.append(source,document.createTextNode(" · "),lic);
-  el.replaceChildren(img,credit);
- }catch(e){el.innerHTML='<div class="photo-placeholder" aria-hidden="true">🥕</div><span class="photo-credit">No suitable free photo found</span>'}
-}
-
+  const link=document.createElement("a");link.href="https://github.com/fruits-360/fruits-360-100x100";link.target="_blank";link.rel="noopener noreferrer";link.textContent="Fruits-360 · CC BY-SA 4.0";
+  credit.append(link);el.replaceChildren(img,credit);
+ }else{
+  el.innerHTML='<div class="photo-placeholder" aria-hidden="true">'+(VEG_EMOJI[veg]||"🥬")+'</div><span class="photo-credit">Illustration</span>';
+ }
+});
 function update(){const n=Object.keys(picks).length;$("count").textContent=n+" of "+VEGETABLES.length+" ranked";$("bar").style.width=(n/VEGETABLES.length*100)+"%";$("submit").disabled=n!==VEGETABLES.length}
 $("items").addEventListener("change",e=>{if(e.target.matches("select")){if(e.target.value)picks[e.target.dataset.veg]=e.target.value;else delete picks[e.target.dataset.veg];update()}});
 $("reset").onclick=()=>{for(const k of Object.keys(picks))delete picks[k];document.querySelectorAll("select").forEach(s=>s.value="");$("status").className="";$("status").style.display="none";update()};
