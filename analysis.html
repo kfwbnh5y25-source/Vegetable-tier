@@ -1,1 +1,138 @@
 <!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f1e8"><meta name="description" content="Stats for nerds — vegetable tier-list community statistics.">
+<title>Stats for nerds · LAF Vegetable Tier List</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;color:#20251f;background:#f5f1e8;font-synthesis:none;--ink:#20251f;--muted:#62685d;--paper:#fffdf8;--line:#e2ded3;--green:#58704c;--purple:#7041a6}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:1100px;margin:auto;padding:22px 20px 56px}
+header{padding:18px 0 22px;border-bottom:1px solid #d8d3c7}.kicker{font-size:.72rem;font-weight:850;letter-spacing:.15em;text-transform:uppercase;color:var(--green)}
+h1{font-size:clamp(2.5rem,7vw,5rem);line-height:.92;letter-spacing:-.065em;margin:13px 0}.intro{max-width:700px;color:var(--muted);line-height:1.6;font-size:1rem}
+a{color:var(--purple);font-weight:750}.topline{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:15px 0;color:var(--muted);font-size:.88rem}
+button{border:0;border-radius:999px;padding:10px 15px;background:#273c2a;color:white;font:inherit;font-weight:750;cursor:pointer;min-height:42px}
+#status{font-size:.85rem;color:var(--muted)}.sections{display:grid;gap:18px;margin-top:18px}
+.category{background:#ebe7dc;border:1px solid #ded9cc;border-radius:18px;padding:16px}
+.cat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.cat-head h2{font-size:1.25rem;letter-spacing:-.03em;margin:0 0 4px}.cat-head p{margin:0;color:#62685d;font-size:.82rem;line-height:1.45}.tag{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#68715f;white-space:nowrap}
+.entries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.entry{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;min-width:0}
+.entry-top{display:flex;align-items:center;gap:9px;min-width:0}.veg-icon{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:9px;background:#f0f3e8;padding:5px}
+.veg-icon img,.veg-icon svg{display:block;width:24px;height:24px;object-fit:contain;object-position:center}.veg-title{min-width:0;flex:1;font-size:.87rem;font-weight:850;line-height:1.2;overflow-wrap:anywhere}.veg-title em{display:block;font-size:.68rem;font-weight:550;color:var(--purple);margin-top:2px}.en{display:block;color:var(--purple);font-style:italic;font-weight:500;font-size:.88em;line-height:1.45;margin-top:3px}.en-inline{color:var(--purple);font-style:italic;font-weight:500}
+.rank{font-size:.68rem;font-weight:850;color:#777e72;white-space:nowrap}.stats{display:flex;justify-content:space-between;gap:8px;margin:9px 0 6px;font-size:.72rem;color:var(--muted)}.stats strong{color:var(--ink)}
+.hist{display:flex;height:12px;overflow:hidden;border-radius:99px;background:#e9e5dc;gap:2px}.seg{height:100%;min-width:0}.hist-legend{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:6px}
+.hist-legend span{font-size:.62rem;color:#74796f;text-align:center;white-space:nowrap}.hist-legend b{font-weight:850;color:#30372e}
+.empty{background:var(--paper);border-radius:12px;padding:20px;color:var(--muted)}
+.extra-panel{background:#fffdf8;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:18px}
+.extra-panel h2{font-size:1.3rem;margin:0 0 5px;letter-spacing:-.03em}
+.extra-panel .lead{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.5}
+.extra-list{display:grid;gap:8px}
+.extra-item{background:#f5f1e8;border-radius:12px;padding:12px;min-width:0}
+.extra-item strong{display:block;font-size:.92rem}
+.extra-item small{display:block;color:var(--muted);font-size:.74rem;margin-top:4px;line-height:1.45}
+.tribe-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.tribe-card{background:#f5f1e8;border-radius:12px;padding:12px;min-width:0}
+.tribe-card h3{margin:0 0 5px;font-size:.95rem}
+.tribe-card p{margin:0;color:var(--muted);font-size:.78rem;line-height:1.45}
+@media(max-width:680px){.extra-panel{padding:12px}.tribe-grid{grid-template-columns:1fr}}
+.method{margin-top:20px;padding:15px 16px;background:#fffdf8;border:1px solid var(--line);border-radius:14px;color:#62685d;font-size:.78rem;line-height:1.6}
+footer{margin-top:22px;padding-top:12px;border-top:1px solid #d8d3c7;font-size:.8rem;color:#777e72}
+@media(max-width:680px){.wrap{padding:14px 10px 38px}.category{padding:12px}.entries{grid-template-columns:1fr}.cat-head h2{font-size:1.1rem}.entry{padding:9px}.intro{font-size:.93rem}}
+</style>
+</head>
+<body><main class="wrap">
+<header><div class="kicker">LAF · Laboratoire Albert Fert · Data corner</div><h1>Stats for<br>nerds.</h1><p class="intro">Les légumes, mais avec des statistiques. Cinq façons de lire les votes de la communauté.<span class="en">Vegetables, but make it data. Five ways to explore the community's votes.</span></p><p><a href="./index.html">← Retour au classement / Back to the tier list</a>　·　<a href="./average.html">Classement moyen / Mean ranking</a></p></header>
+<div class="topline"><span id="summary">Chargement des statistiques…</span><span id="status" role="status" aria-live="polite">Connexion à la base…</span><button id="refresh" type="button">Actualiser · Refresh</button></div>
+<div id="sections" class="sections"><div class="empty">Chargement…</div></div>
+<section class="extra-panel" aria-labelledby="odds-title"><h2 id="odds-title">Taste odds 🎲</h2><p class="lead">Les fans d’un légume sont-ils plus susceptibles d’aimer ou de détester un autre ? « Fan » = S/A ; « aimer » = S/A ; « détester » = D/F. On compare les proportions chez les fans et les non-fans, avec au moins 3 personnes dans chaque groupe.<span class="en">Are fans of one vegetable more likely to love or hate another? “Fan” = S/A; “love” = S/A; “hate” = D/F. We compare the proportions among fans and non-fans, requiring at least 3 people in each group. p is a two-sided Fisher exact test; q is Benjamini–Hochberg adjusted across all tested pairs.</span><span class="en">p is the two-sided Fisher exact test; q adjusts for multiple comparisons. Neither proves causation.</span></p><div id="odds-results" class="extra-list"><div class="empty">Calcul des probabilités…</div></div></section>
+
+<section class="extra-panel" aria-labelledby="tribes-title"><h2 id="tribes-title">Vegetable tribes 🥬</h2><p class="lead">Des groupes de personnes aux classements similaires, après correction des goûts globalement généreux/sévères et de la popularité de chaque légume. Trois groupes exploratoires, pas des étiquettes définitives.<span class="en">Groups of people with similar tier lists, adjusted for generous or harsh rating habits and each vegetable's overall popularity. These are exploratory clusters, not fixed personality labels.</span></p><div id="tribe-results" class="tribe-grid"><div class="empty">Recherche des tribus…</div></div></section>
+<section class="extra-panel" aria-labelledby="cult-title"><h2 id="cult-title">Cult classic 🌟</h2><p class="lead">Peu de fans, mais des fans qui le mettent systématiquement au sommet : au moins 2 votes S, maximum 40 % de votes S, au moins 5 votes au total.<span class="en">A niche favourite with a devoted following: at least 2 S-tier votes, no more than 40% of all votes in S, and at least 5 votes overall.</span></p><div id="cult-results" class="extra-list"><div class="empty">Recherche des favoris de niche…</div></div></section>
+<section class="extra-panel" aria-labelledby="triple-title"><h2 id="triple-title">Unexpected taste combinations 🧪</h2><p class="lead">Des combinaisons de deux légumes dont les préférences relatives prédisent un troisième — au-delà des effets de popularité. Résultats exploratoires, seuil strict (|r| ≥ 0,90 et 9 votes communs minimum).<span class="en">Pairs of vegetables whose relative preferences help predict a third, beyond overall popularity effects. Exploratory results with a strict threshold (|r| ≥ 0.90 and at least 9 shared votes).</span></p><div id="triple-results" class="extra-list"><div class="empty">Recherche de combinaisons…</div></div></section>
+<div class="method"><strong>Comment lire ces stats :</strong> chaque histogramme montre le nombre de votes dans les six tiers (S → F). Les légumes avec moins de 3 votes sont exclus pour éviter les classements trop fragiles. « Consensus » = écart-type le plus faible ; « ambigu » = entropie la plus élevée ; « polarisant » = votes opposés S/A contre D/F, avec peu de votes au milieu. Les catégories peuvent se recouper.<span class="en">How to read these stats: each histogram shows the number of votes in the six tiers (S → F). Vegetables with fewer than 3 votes are excluded to avoid unstable rankings. “Consensus” means the lowest standard deviation; “ambiguous” means the highest entropy; “polarising” means a split between high (S/A) and low (D/F) tiers, with few votes in the middle. Categories can overlap.</span><span class="en">Each category is ranked independently; one vegetable can appear in more than one list.</span></div>
+<footer>Les résultats sont anonymes et actualisés depuis la base de données.<span class="en">Submissions are anonymous, and aggregate statistics update from the database.</span></footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://dpnzgpmlbdrlwackyafa.supabase.co';
+const SUPABASE_KEY='sb_publishable_838VhmZlihiFPH5OU34shQ_Aaai2Fhz';
+const TIERS=['S','A','B','C','D','F'];
+const COLORS={S:'#ef8888',A:'#efb16e',B:'#e8d477',C:'#b9ce86',D:'#83b58a',F:'#86acd0'};
+const NAMES={"Artichoke":"Artichaut","Asparagus":"Asperge","Aubergine":"Aubergine","Beetroot":"Betterave","Bell pepper":"Poivron","Broccoli":"Brocoli","Brussels sprouts":"Choux de Bruxelles","Cabbage":"Chou","Carrot":"Carotte","Cauliflower":"Chou-fleur","Celery":"Céleri","Chard":"Blette","Chicory":"Chicorée","Corn":"Maïs","Cucumber":"Concombre","Fennel":"Fenouil","Garlic":"Ail","Green beans":"Haricots verts","Kale":"Chou kale","Leek":"Poireau","Lettuce":"Laitue","Mushroom":"Champignon","Okra":"Gombo","Onion":"Oignon","Parsnip":"Panais","Peas":"Petits pois","Potato":"Pomme de terre","Pumpkin":"Potiron","Radish":"Radis","Spinach":"Épinards","Sweet potato":"Patate douce","Tomato":"Tomate","Turnip":"Navet","Zucchini":"Courgette","Bok choy":"Pak-choï","Butternut squash":"Courge butternut","Celeriac":"Céleri-rave","Kohlrabi":"Chou-rave","Shallot":"Échalote","Watercress":"Cresson"};
+const ICONS={"Artichoke":"artichoke.svg","Asparagus":"asparagus.svg","Aubergine":"aubergine.svg","Beetroot":"beetroot.svg","Bell pepper":"bell-pepper.svg","Broccoli":"broccoli.svg","Brussels sprouts":"brussels-sprouts.svg","Cabbage":"cabbage.svg","Carrot":"carrot.svg","Cauliflower":"cauliflower.svg","Celery":"celery.svg","Chard":"chard.svg","Chicory":"chicory.svg","Corn":"corn.svg","Cucumber":"cucumber.svg","Fennel":"fennel.svg","Garlic":"garlic.svg","Green beans":"green-beans.svg","Kale":"kale.svg","Leek":"leek.svg","Lettuce":"lettuce.svg","Mushroom":"mushroom.svg","Okra":"okra.svg","Onion":"onion.svg","Parsnip":"parsnip.svg","Peas":"peas.svg","Potato":"potato.svg","Pumpkin":"pumpkin.svg","Radish":"radish.svg","Spinach":"spinach.svg","Sweet potato":"sweet-potato.svg","Tomato":"tomato.svg","Turnip":"turnip.svg","Zucchini":"zucchini.svg","Bok choy":"bok-choy.svg","Butternut squash":"butternut-squash.svg","Celeriac":"celeriac.svg","Kohlrabi":"kohlrabi.svg","Shallot":"shallot.svg","Watercress":"watercress.svg"};
+const artichokeSvg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#f0f3e8"/><path d="M32 54C17 54 11 43 14 32 9 23 16 15 23 17 25 8 39 8 41 17 49 14 56 23 50 32 54 43 47 54 32 54Z" fill="#73a94e" stroke="#315f36" stroke-width="3"/><path d="M32 15 27 49M32 15 38 49M16 28l14 12m18-12L34 40M14 38l15 10m21-10L35 48" fill="none" stroke="#d7e6a7" stroke-width="3" stroke-linecap="round"/></svg>';
+const watercressSvg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#f0f3e8"/><g fill="none" stroke="#397447" stroke-width="3" stroke-linecap="round"><path d="M31 55 18 20M31 55 47 15M31 55 9 38m22 17 24-17"/></g><g fill="#70a95b" stroke="#397447" stroke-width="1.5"><ellipse cx="17" cy="19" rx="9" ry="5" transform="rotate(35 17 19)"/><ellipse cx="48" cy="15" rx="9" ry="5" transform="rotate(-35 48 15)"/><ellipse cx="9" cy="38" rx="9" ry="5" transform="rotate(10 9 38)"/><ellipse cx="55" cy="38" rx="9" ry="5" transform="rotate(-10 55 38)"/><ellipse cx="31" cy="31" rx="9" ry="5"/></g></svg>';
+const dataSvg=s=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);
+function iconUrl(v){if(v==='Artichoke')return dataSvg(artichokeSvg);if(v==='Watercress')return dataSvg(watercressSvg);return './assets/crop-icons/'+ICONS[v]}
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function metric(r,key){return Number(r[key]||0)}
+function polarisation(r){const c=r.tier_counts||{},n=metric(r,'votes');const high=(c.S||0)+(c.A||0),low=(c.D||0)+(c.F||0);return n?4*high*low/(n*n)*(high+low)/n:0}
+function hist(r){const c=r.tier_counts||{},n=metric(r,'votes');return '<div class="hist" role="img" aria-label="'+TIERS.map(t=>t+': '+(c[t]||0)).join(', ')+'">'+TIERS.map(t=>{const v=Number(c[t]||0);return v?'<span class="seg" style="width:'+(v/n*100)+'%;background:'+COLORS[t]+'"></span>':''}).join('')+'</div><div class="hist-legend">'+TIERS.map(t=>'<span><b>'+t+'</b> '+(c[t]||0)+'</span>').join('')+'</div>'}
+function card(r,i,kind){const v=r.vegetable;const score=metric(r,'average_score');let stat='';
+if(kind==='mean')stat='<strong>'+score.toFixed(2)+'/6</strong> average';
+if(kind==='agreement')stat='<strong>'+(metric(r,'disagreement')).toFixed(2)+'</strong> standard deviation';
+if(kind==='entropy')stat='<strong>'+((metric(r,'entropy')/Math.log(6))*100).toFixed(0)+'%</strong> entropy';
+if(kind==='polar')stat='<strong>'+(polarisation(r)*100).toFixed(0)+'%</strong> split index';
+return '<article class="entry"><div class="entry-top"><span class="veg-icon"><img src="'+iconUrl(v)+'" alt="" loading="lazy" onerror="this.hidden=true"></span><div class="veg-title">'+esc(NAMES[v]||v)+'<em>'+esc(v)+'</em></div><span class="rank">#'+(i+1)+'</span></div><div class="stats"><span>'+stat+'</span><span><strong>'+metric(r,'votes')+'</strong> votes</span></div>'+hist(r)+'</article>'}
+function section(title,subtitle,tag,rows,kind){const translations={'Les meilleures moyennes de la communauté.':'The community\'s highest average ratings.','Les moyennes les plus basses.':'The lowest average ratings.','Les votes les plus regroupés autour d’un seul tier.':'The strongest agreement around a single tier.','Les distributions les plus dispersées entre les six tiers.':'The most spread-out distributions across all six tiers.','Le plus grand clivage entre les tiers hauts (S/A) et bas (D/F).':'The biggest divide between high (S/A) and low (D/F) tiers.'};return '<section class="category"><div class="cat-head"><div><h2>'+title+'</h2><p>'+subtitle+'<span class="en">'+(translations[subtitle]||'Community results for this category.')+'</span></p></div><span class="tag">'+tag+'</span></div><div class="entries">'+rows.slice(0,5).map((r,i)=>card(r,i,kind)).join('')+'</div></section>'}
+
+function pct(x){return Math.round(Number(x)*100)+'%'}
+async function loadTasteOdds(){
+ const target=$('odds-results');
+ try{
+  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  const {data,error}=await client.rpc('vegetable_taste_odds');
+  if(error)throw error;
+  const rows=data||[];
+  if(!rows.length){target.innerHTML='<div class="empty">Pas encore assez de réponses pour faire ressortir des écarts solides.<span class="en">Not enough responses yet to identify clear differences.</span></div>';return;}
+  const groups=[['hate','Les fans qui détestent davantage','Fans more likely to hate'],['love','Les fans qui aiment davantage','Fans more likely to love']];
+  target.innerHTML=groups.map(([outcome,title,english])=>{
+   const items=rows.filter(r=>r.outcome===outcome).sort((a,b)=>Number(a.q_value)-Number(b.q_value)||Number(a.p_value)-Number(b.p_value)||Number(b.risk_ratio)-Number(a.risk_ratio));
+   if(!items.length)return '';
+   return '<div class="extra-item"><strong>'+title+'<span class="en">'+english+'</span></strong></div>'+items.map(r=>{
+    const fan=esc(NAMES[r.vegetable_fan]||r.vegetable_fan),targetName=esc(NAMES[r.vegetable_target]||r.vegetable_target);
+    const verb=outcome==='hate'?'détester':'aimer',englishVerb=outcome==='hate'?'hate':'love';
+    const rr=Number(r.risk_ratio).toFixed(1).replace('.0','');
+    return '<article class="extra-item"><strong>Les fans de '+fan+' sont '+rr+'× plus susceptibles de '+verb+' '+targetName+'.</strong><span class="en">Fans of '+esc(r.vegetable_fan)+' are '+rr+'× more likely to '+englishVerb+' '+esc(r.vegetable_target)+'.</span><small>Fans : '+pct(r.fan_rate)+' ('+r.fan_events+'/'+r.fan_total+') · Non-fans : '+pct(r.nonfan_rate)+' ('+r.nonfan_events+'/'+r.nonfan_total+').<br>Fisher p = '+Number(r.p_value).toFixed(4)+' · q = '+Number(r.q_value).toFixed(4)+'<span class="en"> Fans: '+pct(r.fan_rate)+' ('+r.fan_events+'/'+r.fan_total+') · Non-fans: '+pct(r.nonfan_rate)+' ('+r.nonfan_events+'/'+r.nonfan_total+').<br>Fisher p = '+Number(r.p_value).toFixed(4)+' · adjusted q = '+Number(r.q_value).toFixed(4)+'</span></small></article>';
+   }).join('');
+  }).join('')||'<div class="empty">Aucun écart suffisamment marqué pour le moment.<span class="en">No sufficiently large differences yet.</span></div>';
+ }catch(e){console.error('Taste odds:',e);target.innerHTML='<div class="empty">Probabilités temporairement indisponibles.</div>';}
+}
+async function load(){const btn=$('refresh');btn.disabled=true;$('status').textContent='Mise à jour…';try{const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data,error}=await client.rpc('vegetable_analysis');if(error)throw error;const rows=(data||[]).filter(r=>r.vegetable&&Number(r.votes)>=3&&r.tier_counts).map(r=>({...r,average_score:Number(r.average_score),votes:Number(r.votes),disagreement:Number(r.disagreement),entropy:Number(r.entropy)}));if(!rows.length){$('sections').innerHTML='<div class="empty">Pas encore assez de votes pour établir les statistiques. (Not enough votes yet.)</div>';$('summary').textContent='En attente de données';return}
+const byMean=[...rows].sort((a,b)=>b.average_score-a.average_score||b.votes-a.votes);
+const byLow=[...rows].sort((a,b)=>a.average_score-b.average_score||b.votes-a.votes);
+const byAgreement=[...rows].sort((a,b)=>a.disagreement-b.disagreement||b.votes-a.votes);
+const byEntropy=[...rows].sort((a,b)=>b.entropy-a.entropy||b.votes-a.votes);
+const byPolar=[...rows].sort((a,b)=>polarisation(b)-polarisation(a)||b.votes-a.votes);
+$('sections').innerHTML=
+section('On aime','Les meilleures moyennes de la communauté.','TOP AVERAGE',byMean,'mean')+
+section('On déteste','Les moyennes les plus basses.','BOTTOM AVERAGE',byLow,'mean')+
+section('We are all the same','Les votes les plus regroupés autour d’un seul tier.','CONSENSUS',byAgreement,'agreement')+
+section('Different / ambiguous','Les distributions les plus dispersées entre les six tiers.','MAX ENTROPY',byEntropy,'entropy')+
+section('Most polarising','Le plus grand clivage entre les tiers hauts (S/A) et bas (D/F).','BIMODAL SPLIT',byPolar,'polar');
+const total=rows.reduce((n,r)=>n+r.votes,0);$('summary').textContent=rows.length+' légumes analysés · '+total+' votes pris en compte · 3 votes minimum par légume';$('status').textContent='Données actualisées.'}catch(e){console.error(e);$('status').textContent='Impossible de charger les stats : '+(e.message||e);$('sections').innerHTML='<div class="empty">Erreur de chargement. Réessayez. (Could not load statistics.)</div>'}finally{btn.disabled=false}}
+
+async function loadExtras(){
+ const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+ const [tribes,cults,triples]=await Promise.all([
+  client.rpc('vegetable_taste_tribes'),
+  client.rpc('vegetable_cult_classics'),
+  client.rpc('vegetable_taste_combinations')
+ ]);
+ const tribeBox=$('tribe-results'),cultBox=$('cult-results'),tripleBox=$('triple-results');
+ if(tribes.error){tribeBox.innerHTML='<div class="empty">Tribus indisponibles pour le moment.<span class="en">Taste tribes are temporarily unavailable.</span></div>'}
+ else if(!tribes.data?.length){tribeBox.innerHTML='<div class="empty">Pas encore assez de réponses pour former des groupes.<span class="en">Not enough responses to form groups yet.</span></div>'}
+ else tribeBox.innerHTML=tribes.data.map(t=>'<article class="tribe-card"><h3>'+esc(t.tribe)+' · '+Number(t.members)+' personnes</h3><p>Préférences distinctives : '+esc(t.signature)+'.</p></article>').join('');
+ if(cults.error){cultBox.innerHTML='<div class="empty">Cult classics indisponibles.</div>'}
+ else if(!cults.data?.length){cultBox.innerHTML='<div class="empty">Aucun légume ne remplit encore les critères de culte confidentiel.<span class="en">No vegetable meets the cult-classic criteria yet.</span></div>'}
+ else cultBox.innerHTML=cults.data.map(v=>'<article class="extra-item"><strong>'+esc(NAMES[v.vegetable]||v.vegetable)+' · '+esc(v.vegetable)+'</strong><small>'+Number(v.fans)+' votes S sur '+Number(v.votes)+' ('+Math.round(Number(v.fan_share)*100)+' %) · moyenne des fans : '+Number(v.fan_average).toFixed(1)+'/6</small></article>').join('');
+ if(triples.error){tripleBox.innerHTML='<div class="empty">Combinaisons indisponibles.</div>'}
+ else if(!triples.data?.length){tripleBox.innerHTML='<div class="empty">Pas encore de combinaison assez forte et assez documentée.<span class="en">No combination is strong and well-supported enough yet.</span></div>'}
+ else tripleBox.innerHTML=triples.data.map(t=>{
+  const sign=Number(t.interaction)>=0?'positively':'inversely';
+  const phrase=Number(t.interaction)>=0?'Quand les préférences pour les deux premiers vont ensemble, le troisième tend aussi à être aimé.':'Le duo et le troisième légume ont tendance à évoluer en sens opposés.';
+  return '<article class="extra-item"><strong>'+esc(t.vegetable_a)+' + '+esc(t.vegetable_b)+' → '+esc(t.vegetable_c)+'</strong><small>'+phrase+' Interaction r = '+Number(t.interaction).toFixed(2)+' · '+Number(t.shared_votes)+' votes communs.</small></article>';
+ }).join('');
+}
+function refreshAll(){load();loadTasteOdds();loadExtras()}$('refresh').addEventListener('click',refreshAll);refreshAll();
+</script></body></html>
