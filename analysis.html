@@ -22,7 +22,6 @@ button{border:0;border-radius:999px;padding:10px 15px;background:#273c2a;color:w
 .hist{display:flex;height:12px;overflow:hidden;border-radius:99px;background:#e9e5dc;gap:2px}.seg{height:100%;min-width:0}.hist-legend{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:6px}
 .hist-legend span{font-size:.62rem;color:#74796f;text-align:center;white-space:nowrap}.hist-legend b{font-weight:850;color:#30372e}
 .empty{background:var(--paper);border-radius:12px;padding:20px;color:var(--muted)}
-.correlation-panel{background:#fffdf8;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:18px}.correlation-panel h2{font-size:1.3rem;margin:0 0 5px;letter-spacing:-.03em}.correlation-panel .lead{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.5}.correlation-list{display:grid;gap:8px}.correlation-item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f5f1e8;border-radius:12px;padding:12px}.correlation-copy{min-width:0}.correlation-copy strong{display:block;font-size:.92rem}.correlation-copy small{display:block;color:var(--muted);font-size:.74rem;margin-top:4px}.correlation-r{font-weight:850;font-size:.83rem;white-space:nowrap;color:var(--green)}.correlation-r.negative{color:#a34f54}
 .extra-panel{background:#fffdf8;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:18px}
 .extra-panel h2{font-size:1.3rem;margin:0 0 5px;letter-spacing:-.03em}
 .extra-panel .lead{margin:0 0 12px;color:var(--muted);font-size:.84rem;line-height:1.5}
@@ -35,7 +34,6 @@ button{border:0;border-radius:999px;padding:10px 15px;background:#273c2a;color:w
 .tribe-card h3{margin:0 0 5px;font-size:.95rem}
 .tribe-card p{margin:0;color:var(--muted);font-size:.78rem;line-height:1.45}
 @media(max-width:680px){.extra-panel{padding:12px}.tribe-grid{grid-template-columns:1fr}}
-@media(max-width:680px){.correlation-panel{padding:12px}.correlation-item{padding:10px}}
 .method{margin-top:20px;padding:15px 16px;background:#fffdf8;border:1px solid var(--line);border-radius:14px;color:#62685d;font-size:.78rem;line-height:1.6}
 footer{margin-top:22px;padding-top:12px;border-top:1px solid #d8d3c7;font-size:.8rem;color:#777e72}
 @media(max-width:680px){.wrap{padding:14px 10px 38px}.category{padding:12px}.entries{grid-template-columns:1fr}.cat-head h2{font-size:1.1rem}.entry{padding:9px}.intro{font-size:.93rem}}
@@ -45,8 +43,8 @@ footer{margin-top:22px;padding-top:12px;border-top:1px solid #d8d3c7;font-size:.
 <header><div class="kicker">LAF · Laboratoire Albert Fert · Data corner</div><h1>Stats for<br>nerds.</h1><p class="intro">Les légumes, mais avec des statistiques. Cinq façons de lire les votes de la communauté.<span class="en">Vegetables, but make it data. Five ways to explore the community's votes.</span></p><p><a href="./index.html">← Retour au classement / Back to the tier list</a>　·　<a href="./average.html">Classement moyen / Mean ranking</a></p></header>
 <div class="topline"><span id="summary">Chargement des statistiques…</span><span id="status" role="status" aria-live="polite">Connexion à la base…</span><button id="refresh" type="button">Actualiser · Refresh</button></div>
 <div id="sections" class="sections"><div class="empty">Chargement…</div></div>
-<section class="extra-panel" aria-labelledby="odds-title"><h2 id="odds-title">Taste odds 🎲</h2><p class="lead">Les fans d’un légume sont-ils plus susceptibles d’aimer ou de détester un autre ? « Fan » = S/A ; « aimer » = S/A ; « détester » = D/F. On compare les proportions chez les fans et les non-fans, avec au moins 3 personnes dans chaque groupe.<span class="en">Are fans of one vegetable more likely to love or hate another? “Fan” = S/A; “love” = S/A; “hate” = D/F. We compare the proportions among fans and non-fans, requiring at least 3 people in each group.</span></p><div id="odds-results" class="extra-list"><div class="empty">Calcul des probabilités…</div></div></section>
-<section class="correlation-panel" aria-labelledby="correlation-title"><h2 id="correlation-title">Funny correlations 🥦</h2><p class="lead">Les associations de goûts qui vont à contre-courant : si quelqu’un aime un légume plus que sa tendance habituelle, aime-t-il l’autre moins que prévu ? On retire à la fois la popularité générale de chaque légume et la tendance de chaque personne à noter généreusement ou sévèrement. Seules les associations négatives fortes sont affichées.<span class="en">Taste associations that go against the grain: when someone likes one vegetable more than their usual tendency, do they like the other less than expected? We remove both each vegetable's overall popularity and each person's tendency to rate generously or harshly. Only strong negative associations are shown.</span><span class="en-inline">Correlation is not causation.</span></p><div id="correlation-results" class="correlation-list"><div class="empty">Recherche de duos improbables…</div></div></section>
+<section class="extra-panel" aria-labelledby="odds-title"><h2 id="odds-title">Taste odds 🎲</h2><p class="lead">Les fans d’un légume sont-ils plus susceptibles d’aimer ou de détester un autre ? « Fan » = S/A ; « aimer » = S/A ; « détester » = D/F. On compare les proportions chez les fans et les non-fans, avec au moins 3 personnes dans chaque groupe.<span class="en">Are fans of one vegetable more likely to love or hate another? “Fan” = S/A; “love” = S/A; “hate” = D/F. We compare the proportions among fans and non-fans, requiring at least 3 people in each group. p is a two-sided Fisher exact test; q is Benjamini–Hochberg adjusted across all tested pairs.</span><span class="en">p is the two-sided Fisher exact test; q adjusts for multiple comparisons. Neither proves causation.</span></p><div id="odds-results" class="extra-list"><div class="empty">Calcul des probabilités…</div></div></section>
+
 <section class="extra-panel" aria-labelledby="tribes-title"><h2 id="tribes-title">Vegetable tribes 🥬</h2><p class="lead">Des groupes de personnes aux classements similaires, après correction des goûts globalement généreux/sévères et de la popularité de chaque légume. Trois groupes exploratoires, pas des étiquettes définitives.<span class="en">Groups of people with similar tier lists, adjusted for generous or harsh rating habits and each vegetable's overall popularity. These are exploratory clusters, not fixed personality labels.</span></p><div id="tribe-results" class="tribe-grid"><div class="empty">Recherche des tribus…</div></div></section>
 <section class="extra-panel" aria-labelledby="cult-title"><h2 id="cult-title">Cult classic 🌟</h2><p class="lead">Peu de fans, mais des fans qui le mettent systématiquement au sommet : au moins 2 votes S, maximum 40 % de votes S, au moins 5 votes au total.<span class="en">A niche favourite with a devoted following: at least 2 S-tier votes, no more than 40% of all votes in S, and at least 5 votes overall.</span></p><div id="cult-results" class="extra-list"><div class="empty">Recherche des favoris de niche…</div></div></section>
 <section class="extra-panel" aria-labelledby="triple-title"><h2 id="triple-title">Unexpected taste combinations 🧪</h2><p class="lead">Des combinaisons de deux légumes dont les préférences relatives prédisent un troisième — au-delà des effets de popularité. Résultats exploratoires, seuil strict (|r| ≥ 0,90 et 9 votes communs minimum).<span class="en">Pairs of vegetables whose relative preferences help predict a third, beyond overall popularity effects. Exploratory results with a strict threshold (|r| ≥ 0.90 and at least 9 shared votes).</span></p><div id="triple-results" class="extra-list"><div class="empty">Recherche de combinaisons…</div></div></section>
@@ -95,32 +93,10 @@ async function loadTasteOdds(){
     const fan=esc(NAMES[r.vegetable_fan]||r.vegetable_fan),targetName=esc(NAMES[r.vegetable_target]||r.vegetable_target);
     const verb=outcome==='hate'?'détester':'aimer',englishVerb=outcome==='hate'?'hate':'love';
     const rr=Number(r.risk_ratio).toFixed(1).replace('.0','');
-    return '<article class="extra-item"><strong>Les fans de '+fan+' sont '+rr+'× plus susceptibles de '+verb+' '+targetName+'.</strong><span class="en">Fans of '+esc(r.vegetable_fan)+' are '+rr+'× more likely to '+englishVerb+' '+esc(r.vegetable_target)+'.</span><small>Fans : '+pct(r.fan_rate)+' ('+r.fan_events+'/'+r.fan_total+') · Non-fans : '+pct(r.nonfan_rate)+' ('+r.nonfan_events+'/'+r.nonfan_total+').<span class="en"> Fans: '+pct(r.fan_rate)+' ('+r.fan_events+'/'+r.fan_total+') · Non-fans: '+pct(r.nonfan_rate)+' ('+r.nonfan_events+'/'+r.nonfan_total+').</span></small></article>';
+    return '<article class="extra-item"><strong>Les fans de '+fan+' sont '+rr+'× plus susceptibles de '+verb+' '+targetName+'.</strong><span class="en">Fans of '+esc(r.vegetable_fan)+' are '+rr+'× more likely to '+englishVerb+' '+esc(r.vegetable_target)+'.</span><small>Fans : '+pct(r.fan_rate)+' ('+r.fan_events+'/'+r.fan_total+') · Non-fans : '+pct(r.nonfan_rate)+' ('+r.nonfan_events+'/'+r.nonfan_total+').<br>Fisher p = '+Number(r.p_value).toFixed(4)+' · q = '+Number(r.q_value).toFixed(4)+'<span class="en"> Fans: '+pct(r.fan_rate)+' ('+r.fan_events+'/'+r.fan_total+') · Non-fans: '+pct(r.nonfan_rate)+' ('+r.nonfan_events+'/'+r.nonfan_total+').<br>Fisher p = '+Number(r.p_value).toFixed(4)+' · adjusted q = '+Number(r.q_value).toFixed(4)+'</span></small></article>';
    }).join('');
   }).join('')||'<div class="empty">Aucun écart suffisamment marqué pour le moment.<span class="en">No sufficiently large differences yet.</span></div>';
  }catch(e){console.error('Taste odds:',e);target.innerHTML='<div class="empty">Probabilités temporairement indisponibles.</div>';}
-}
-async function loadCorrelations(){
- const target=$('correlation-results');
- try{
-  const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-  const {data,error}=await client.rpc('vegetable_correlations');
-  if(error)throw error;
-  const pairs=data||[];
-  if(!pairs.length){
-   target.innerHTML='<div class="empty">Aucune corrélation assez solide pour le moment. Aucune paire n’atteint actuellement |r| ≥ 0,70.<span class="en">No sufficiently strong correlations yet. No pair currently reaches |r| ≥ 0.70.</span></div>';
-   return;
-  }
-  target.innerHTML=pairs.map(p=>{
-   const negative=Number(p.correlation)<0;
-   const a=esc(NAMES[p.vegetable_a]||p.vegetable_a), b=esc(NAMES[p.vegetable_b]||p.vegetable_b);
-   const relation='À goût général égal, ceux qui aiment particulièrement '+a+' aiment plutôt moins '+b+' 👀';
-   return '<article class="correlation-item"><div class="correlation-copy"><strong>'+relation+'</strong><small>'+esc(p.vegetable_a)+' × '+esc(p.vegetable_b)+' · '+Number(p.shared_votes)+' votes communs</small></div><span class="correlation-r '+(negative?'negative':'')+'">r = '+Number(p.correlation).toFixed(2)+'</span></article>';
-  }).join('');
- }catch(e){
-  console.error('Correlation data:',e);
-  target.innerHTML='<div class="empty">Les corrélations sont temporairement indisponibles.</div>';
- }
 }
 async function load(){const btn=$('refresh');btn.disabled=true;$('status').textContent='Mise à jour…';try{const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data,error}=await client.rpc('vegetable_analysis');if(error)throw error;const rows=(data||[]).filter(r=>r.vegetable&&Number(r.votes)>=3&&r.tier_counts).map(r=>({...r,average_score:Number(r.average_score),votes:Number(r.votes),disagreement:Number(r.disagreement),entropy:Number(r.entropy)}));if(!rows.length){$('sections').innerHTML='<div class="empty">Pas encore assez de votes pour établir les statistiques. (Not enough votes yet.)</div>';$('summary').textContent='En attente de données';return}
 const byMean=[...rows].sort((a,b)=>b.average_score-a.average_score||b.votes-a.votes);
@@ -158,5 +134,5 @@ async function loadExtras(){
   return '<article class="extra-item"><strong>'+esc(t.vegetable_a)+' + '+esc(t.vegetable_b)+' → '+esc(t.vegetable_c)+'</strong><small>'+phrase+' Interaction r = '+Number(t.interaction).toFixed(2)+' · '+Number(t.shared_votes)+' votes communs.</small></article>';
  }).join('');
 }
-function refreshAll(){load();loadTasteOdds();loadCorrelations();loadExtras()}$('refresh').addEventListener('click',refreshAll);refreshAll();
+function refreshAll(){load();loadTasteOdds();loadExtras()}$('refresh').addEventListener('click',refreshAll);refreshAll();
 </script></body></html>
